@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+    html,
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canv"></canvas>
+  <script>
+
+    //Hijack JS console.log, from https://stackoverflow.com/a/11403146/10047920
+    (function () {
+      var oldLog = console.log;
+      console.log = function (message, destination = "mouseMoveLog") {
+
+        oldLog.apply(console, arguments);
+      };
+    })();
+
+    let canvas = document.querySelector("#canv");
+    canvas.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    })
+
+    canvas.addEventListener("mousemove", (e) => { console.log("mousemove") });
+    canvas.addEventListener("mousedown", (e) => { console.log("mousedown") });
+    canvas.addEventListener("mouseup", (e) => { console.log("mouseup") });
+
+    canvas.addEventListener("wheel", (e) => { console.log("wheel") });
+
+    document.addEventListener("keyup", (e) => { console.log("keyup"); e.preventDefault(); });
+    document.addEventListener("keydown", (e) => { console.log("keydown"); e.preventDefault(); });
+    document.addEventListener("keypress", (e) => { console.log("keypress"); e.preventDefault(); });
+
+    canvas.addEventListener("touchstart", (e) => { console.log("touchstart") })
+    canvas.addEventListener("touchend", (e) => { console.log("touchend") })
+    canvas.addEventListener("touchmove", (e) => { 
+      console.log("touchmove: "); 
+      for(let touchEvent of e.touches){
+        console.log(touchEvent.clientX + ", " + touchEvent.clientX);
+        // console.log(touchEvent);
+      }
+      e.preventDefault(); 
+    })
+
+    
+    //There are higher-level touch libraries that are out of scope for this class
+
+    let log = [];
+
+
+
+    function update() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let ctx = canvas.getContext("2d");
+      ctx.fillStyle = "gray";
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    }
+
+
+
+    setInterval(update, 100);
+  </script>
+</body>
+
+</html>

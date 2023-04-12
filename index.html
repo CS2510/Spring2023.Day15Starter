@@ -1,0 +1,31 @@
+<!-- 
+    Once you serve this directory with a server (e.g. LiveServer)
+    you can open this file in a browser. This file runs tests
+    on all the games. Games that pass tests will have a green
+    checkmark. Failure is denoted by a red x.
+ -->
+<html>
+    <style>
+        /* Make the iframes larger than their default size */
+        iframe{
+            width:640px;
+            height:480px;
+        }
+    </style>
+    <body>
+        <div>
+            <h1>Test Suite</h1>
+        </div>
+        <div>
+            This page shows all the example games in the directories. This allows to check that changes to the engine don't break the games.
+        </div>
+        <br>
+        <!-- Open the games using iframes. -->
+        <iframe src="/blink/"></iframe>
+        <iframe src="/camera-tracking/"></iframe>
+        <iframe src="/layers/"></iframe>
+        <iframe src="/pong/"></iframe>
+        <iframe src="/orb/"></iframe>
+        <iframe src="/events/"></iframe>
+    </body>
+</html>

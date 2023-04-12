@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    /* Rules for our divs, including the outer div (Out)*/
+    .center-div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      /*Rules for Outer div*/
+      background-color: red;
+      /*Rules for Outer div*/
+      width: 300px;
+      /*Rules for Outer div*/
+      height: 300px;
+
+    }
+
+    /* Rules for the first nested div (Middle) */
+    .center-div>.center-div {
+      background-color: green;
+      width: 200px;
+      height: 200px;
+    }
+
+    /* Rules for the next nested div (Inner) */
+    .center-div>.center-div>.center-div {
+      background-color: blue;
+      width: 100px;
+      height: 100px;
+    }
+
+    .div-text {
+      margin: 1rem;
+    }
+
+    .log {
+      width: 200px;
+      height: 300px;
+      text-align: center;
+      background-color: lightgray;
+    }
+
+    .log-header{
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body style="display:flex;flex-direction:row;">
+  <div class="center-div" id="outer" tabindex="0">
+    <div class="div-text">Outer</div>
+    <div class="center-div" id="middle" tabindex="1">
+      <div class="div-text">Middle</div>
+      <div class="center-div" id="inner" tabindex="2">
+        <div class="div-text">Inner</div>
+      </div>
+    </div>
+  </div>
+  <div class="log" >
+    <div class="log-header">Mouse Move Log</div>
+    <div id="mousemovelog"></div>
+  </div>
+  <div class="log">
+    <div class="log-header">Key Up Log</div>
+    <div id="keyuplog"></div>
+  </div>
+
+  <script>
+    let stopAtInner = false;
+    let stopAtMiddle = false;
+    let stopAtOuter = true;
+
+    let mouseMoveLog = document.querySelector("#mousemovelog");
+    let keyUpLog = document.querySelector("#keyuplog");
+    //Hijack JS console.log, from https://stackoverflow.com/a/11403146/10047920
+    (function () {
+      var oldLog = console.log;
+      console.log = function (message, destination = "mouseMoveLog") {
+        let logToModify;
+        if (destination == "mouseMoveLog") {
+          logToModify = mouseMoveLog;
+        }
+        else if(destination == "keyUpLog"){
+          logToModify = keyUpLog;
+        }
+        let currentLogLines = logToModify.innerHTML.split("<br>")
+        let newLog = message + "<br>";
+        for (let i = 0; i < 10 && i < currentLogLines.length; i++) {
+          newLog += currentLogLines[i];
+          newLog += "<br>";
+        }
+        newLog += "...<br>"
+        logToModify.innerHTML = newLog;
+
+        oldLog.apply(console, arguments);
+      };
+    })();
+
+    /* Mouse Move Events */
+    document.querySelector("#outer").addEventListener("mousemove", (e) => {
+      console.log("Outer Mouse Move")
+      if(stopAtOuter){
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    })
+    document.querySelector("#middle").addEventListener("mousemove", (e) => {
+      console.log("Middle Mouse Move")
+      if(stopAtMiddle){
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    })
+    document.querySelector("#inner").addEventListener("mousemove", (e) => {
+      console.log("Inner Mouse Move")
+      // if(stopAtInner){
+      //   e.stopPropagation();
+      //   e.preventDefault();
+      // }
+      e.stopPropagation();
+      e.preventDefault();
+      return false;
+    })
+
+    /* Key Up Events */
+    document.querySelector("#outer").addEventListener("keyup", (e) => {
+      console.log("Outer Key Up", "keyUpLog")
+    })
+    document.querySelector("#middle").addEventListener("keyup", (e) => {
+      console.log("Middle Key Up", "keyUpLog")
+    })
+    document.querySelector("#inner").addEventListener("keyup", (e) => {
+      console.log("Inner Key Up", "keyUpLog")
+    })
+
+    /* Context Menu */
+    document.getElementsByTagName("html")[0].addEventListener("contextmenu", (e)=>{
+      //e.preventDefault();
+    })
+    document.querySelector("#outer").addEventListener("contextmenu", (e)=>{
+      //e.preventDefault();
+    })
+    document.querySelector("#middle").addEventListener("contextmenu", (e)=>{
+      //e.preventDefault();
+    })
+    document.querySelector("#inner").addEventListener("contextmenu", (e)=>{
+      //e.preventDefault();
+    })
+  </script>
+</body>
+
+</html>
