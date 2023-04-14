@@ -4,10 +4,6 @@ class CameraMoverComponent extends Component {
   }
   update() {
   }
-  draw(ctx) {
-    ctx.fillStyle = `rgb(0, 0,255)`
-    ctx.fillRect(0, 0, 100, 100)
-  }
 }
 
 class CameraMoverScene extends Scene {
@@ -15,6 +11,9 @@ class CameraMoverScene extends Scene {
     this.addGameObject(
       new GameObject("CameraMoverGameObject")
         .addComponent(new CameraMoverComponent())
+        .addComponent(new Rectangle("brown")),
+        Vector2.zero,
+        new Vector2(10,10)
     )
   }
 }

@@ -53,22 +53,6 @@ let mouseY
 document.addEventListener("keydown", keyDown)
 document.addEventListener("keyup", keyUp)
 
-document.addEventListener("mousedown", mouseDown);
-document.addEventListener("mouseup", mouseUp);
-document.addEventListener("mousemove", mouseMove);
-
-
-//Mouse event handlers
-function mouseDown(e) {
-    //console.log("mouseDown: " + e.clientX + " " + e.clientY)
-}
-function mouseUp(e) {
-    //console.log("mouseUp: " + e.clientX + " " + e.clientY)
-}
-function mouseMove(e) {
-    //console.log("mouseMove: " + e.clientX + " " + e.clientY)
-}
-
 //Key up event handlers
 function keyUp(e) {
     keysDown[e.key] = false
@@ -312,7 +296,7 @@ function draw() {
             ctx.fillStyle = "white"
             ctx.font = "20px Courier"
             let string = gameObject.name + " (" + gameObject.transform.x + "," + gameObject.transform.y + ")"
-            ctx.fillText(string, 50, y);
+            ctx.fillText(string, 0, y);
             y += 20;
         }
     }
@@ -325,7 +309,7 @@ function draw() {
  * 
  * The engine accepts the following settings. Any other keys on the settings object are ignored.
  * - aspectRatio. The aspect ratio requested by the game. Defaults to 16/9
- * - letterboxColor. The color of the letterboxing bars. To remove letterboxing, use "transparent". Defaults to magenta.
+ * - letterboxColor. The color of the letterboxing bars. To remove letterboxing, use "transparent". Defaults to black.
  * - logicalWidth. The logical width of the game. The engine will scale the drawing area to support this logical width. Defaults to 100.
  */
 function start(title, settings = {}) {
@@ -342,7 +326,7 @@ function start(title, settings = {}) {
     document.title = title
     if (settings) {
         EngineGlobals.requestedAspectRatio = settings.aspectRatio ? settings.aspectRatio : 16 / 9
-        letterboxColor = settings.letterboxColor ? settings.letterboxColor : "magenta"
+        letterboxColor = settings.letterboxColor ? settings.letterboxColor : "black"
         EngineGlobals.logicalWidth = settings.logicalWidth ? settings.logicalWidth : 100
     }
 

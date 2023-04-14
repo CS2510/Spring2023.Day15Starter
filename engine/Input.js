@@ -8,19 +8,18 @@ class Input{
       Input.mouseX = e.clientX
       Input.mouseY = e.clientY
     });
-    canvas.addEventListener("mousedown", (e) => { console.log("mousedown") });
-    canvas.addEventListener("mouseup", (e) => { console.log("mouseup") });
+    canvas.addEventListener("mousedown", (e) => {  });
+    canvas.addEventListener("mouseup", (e) => {  });
 
-    canvas.addEventListener("wheel", (e) => { console.log("wheel") });
+    canvas.addEventListener("wheel", (e) => {  });
 
-    document.addEventListener("keyup", (e) => { console.log("keyup"); e.preventDefault(); });
-    document.addEventListener("keydown", (e) => { console.log("keydown"); e.preventDefault(); });
-    document.addEventListener("keypress", (e) => { console.log("keypress"); e.preventDefault(); });
+    document.addEventListener("keyup", (e) => {  });
+    document.addEventListener("keydown", (e) => {  });
+    document.addEventListener("keypress", (e) => { });
 
-    canvas.addEventListener("touchstart", (e) => { console.log("touchstart") })
-    canvas.addEventListener("touchend", (e) => { console.log("touchend") })
+    canvas.addEventListener("touchstart", (e) => {  })
+    canvas.addEventListener("touchend", (e) => {  })
     canvas.addEventListener("touchmove", (e) => { 
-      console.log("touchmove: "); 
       for(let touchEvent of e.touches){
         console.log(touchEvent.clientX + ", " + touchEvent.clientX);
         // console.log(touchEvent);
