@@ -115,10 +115,17 @@ class Camera extends Component {
     x *= Camera.main.transform.sx;
     y *= Camera.main.transform.sy;
 
-    let logical = Camera.screenToLogicalScreenSpace(x, y, ctx);
+    x /= logicalScaling;
+    y /= logicalScaling
+
+    x -= zeros.zeroX;
+    y -= zeros.zeroY;
+
+   // let logical = Camera.screenToLogicalScreenSpace(x, y, ctx);
 
 
-
+    //return {x,y}
+    return {x:x,y:50/(16/9)}
     return { x: logical.x, y: logical.y }
     // x += EngineGlobals.logicalWidth / 2 
     // y += EngineGlobals.logicalWidth / 2 
