@@ -168,7 +168,7 @@ function update() {
             }
         }
     }
-
+    Input.finishFrame();
 
 
 }
@@ -211,6 +211,7 @@ function draw() {
     ctx.scale(logicalScaling, logicalScaling)
 
     ctx.translate(-Camera.main.transform.x, -Camera.main.transform.y)
+    ctx.scale(Camera.main.transform.sx, Camera.main.transform.sy);
 
 
     //Calculate the min and max layer
