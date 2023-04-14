@@ -1,17 +1,39 @@
 //The code for our Event game
-
-class MoverComponent extends Component{
-  update(ctx){
-    this.transform.x += Time.deltaTime ;
+/**
+ * A component that moves across the screen
+ * The FollowerComponent follows this component
+ */
+class MoverComponent extends Component {
+  update(ctx) {
+    this.transform.x += Time.deltaTime;
   }
 }
 
-class FollowerComponent extends Component{
-  update(ctx){
+/**
+ * This class tracks the MoverComponent and centers around that
+ * 
+ */
+class FollowerComponent extends Component {
+  update(ctx) {
     let moverComponent = GameObject.getObjectByName("MoverGameObject").getComponent("MoverComponent");
-    this.transform.x = moverComponent.transform.x + EngineGlobals.logicalWidth/2 - Camera.main.transform.x;
-    this.transform.y = moverComponent.transform.y +  EngineGlobals.logicalWidth/2 /EngineGlobals.requestedAspectRatio - Camera.main.transform.y; 
+
+    // this.transform.x *= Camera.main.transform.sx;
+    // this.transform.y *= Camera.main.transform.sy;
+
+    // this.transform.x = moverComponent.transform.x
+    // this.transform.y = moverComponent.transform.y
     
+    // this.transform.x += EngineGlobals.logicalWidth / 2
+    // this.transform.y += EngineGlobals.logicalWidth / 2 / EngineGlobals.requestedAspectRatio
+    
+    // this.transform.x -= Camera.main.transform.x;
+    // this.transform.y -= Camera.main.transform.y;
+
+    let coordinates = Camera.worldToLogicalScreenSpace(moverComponent.transform.x,moverComponent.transform.y,ctx);
+    this.transform.x = coordinates.x;
+    this.transform.y = coordinates.y
+
+
     // this.transform.x = moverComponent.transform.x + 50;
     // this.transform.y = moverComponent.transform.y + 50 /(16/9);
   }
@@ -20,7 +42,7 @@ class FollowerComponent extends Component{
 class GUIMouseFollowerComponent extends Component {
   update(ctx) {
 
-    let screenSpace = Camera.toLogicalScreenSpace(Input.mouseX, Input.mouseY, ctx);
+    let screenSpace = Camera.screenToLogicalScreenSpace(Input.mouseX, Input.mouseY, ctx);
     this.transform.x = screenSpace.x;
     this.transform.y = screenSpace.y;
 
@@ -33,11 +55,11 @@ class EventComponent extends Component {
   }
   update(ctx) {
     //First adjust the camera for debugging
-    Camera.main.transform.x = Math.sin(Time.time) * 10;
-    Camera.main.transform.y = Math.sin(Time.time) * 10;
+    // Camera.main.transform.x = Math.sin(Time.time) * 10;
+    // Camera.main.transform.y = Math.sin(Time.time) * 10;
 
-  
-    let worldSpace = Camera.toWorldSpace(Input.mouseX, Input.mouseY, ctx)
+
+    let worldSpace = Camera.screenToWorldSpace(Input.mouseX, Input.mouseY, ctx)
     this.transform.x = worldSpace.x;
     this.transform.y = worldSpace.y;
     // console.log(Input.mouseX + ", " + Input.mouseY + "-> " + x + ", " + y)
@@ -94,20 +116,21 @@ class EventScene extends Scene {
       new GameObject("EventGameObject")
         .addComponent(new EventComponent())
         .addComponent(new Rectangle("blue"))
+        .addComponent(new CameraMover())
     )
 
     this.addGameObject(
       new GameObject("MoverGameObject")
-      .addComponent(new MoverComponent())
-      .addComponent(new Rectangle("red"))
+        .addComponent(new MoverComponent())
+        .addComponent(new Rectangle("red"))
     );
 
     this.addGameObject(
       new GameObject("FollowerGameObject")
-      .addComponent(new GUIRectangle("transparent", "green", 1))
-      .addComponent(new FollowerComponent()),
+        .addComponent(new GUIRectangle("transparent", "green", 1))
+        .addComponent(new FollowerComponent()),
       Vector2.zero,
-      new Vector2(2,2)
+      new Vector2(2, 2)
     )
   }
 }

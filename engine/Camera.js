@@ -40,7 +40,7 @@ class Camera extends Component {
     if (EngineGlobals.requestedAspectRatio <= browserAspectRatio)
       browserWidth -= (ctx.canvas.width - ctx.canvas.height * EngineGlobals.requestedAspectRatio)
 
-    return  browserWidth / EngineGlobals.logicalWidth
+    return browserWidth / EngineGlobals.logicalWidth
     // return 1;
 
   }
@@ -63,7 +63,7 @@ class Camera extends Component {
     else
       zeroX = (ctx.canvas.width - ctx.canvas.height * EngineGlobals.requestedAspectRatio) / 2;
 
-    return {zeroX, zeroY};
+    return { zeroX, zeroY };
 
     // return {zeroX:0, zeroY:0}
   }
@@ -76,19 +76,60 @@ class Camera extends Component {
    * @param {CanvasDrawingContext2D} ctx 
    * @returns The coordinate in world space that is drawn to that screen space pixel
    */
-  static toWorldSpace(x,y,ctx){
+  static screenToWorldSpace(x, y, ctx) {
     let logicalScaling = Camera.getLogicalScale(ctx);
 
     x -= ctx.canvas.width / 2;
     y -= ctx.canvas.height / 2;
+
     x /= logicalScaling;
     y /= logicalScaling;
+
     x += Camera.main.transform.x;
     y += Camera.main.transform.y;
 
-    return {x,y};
+    x /= Camera.main.transform.sx;
+    y /= Camera.main.transform.sy;
+
+    return { x, y };
 
     // return {x:0,y:0};
+  }
+
+  static worldToLogicalScreenSpace(x, y, ctx) {
+
+    let logicalScaling = Camera.getLogicalScale(ctx);
+    let zeros = Camera.getZeros(ctx);
+
+
+
+    x += ctx.canvas.width / 2;
+    y += ctx.canvas.height / 2;
+
+    x *= logicalScaling;
+    y *= logicalScaling;
+
+    x -= Camera.main.transform.x;
+    y -= Camera.main.transform.y;
+
+    x *= Camera.main.transform.sx;
+    y *= Camera.main.transform.sy;
+
+    let logical = Camera.screenToLogicalScreenSpace(x, y, ctx);
+
+
+
+    return { x: logical.x, y: logical.y }
+    // x += EngineGlobals.logicalWidth / 2 
+    // y += EngineGlobals.logicalWidth / 2 
+
+    // x /= 1;
+    // y /= EngineGlobals.requestedAspectRatio
+
+    // x -= Camera.main.transform.x
+    // y -= Camera.main.transform.y
+    // return {x,y}
+
   }
 
   /**
@@ -99,15 +140,15 @@ class Camera extends Component {
    * @param {CanvasDrawingContext2D} ctx The drawing context
    * @returns The coordinate in logical screen space after letter boxing.
    */
-  static toLogicalScreenSpace(x,y,ctx){
+  static screenToLogicalScreenSpace(x, y, ctx) {
     let logicalScaling = Camera.getLogicalScale(ctx)
     let zeros = Camera.getZeros(ctx);
-    
+
     x -= zeros.zeroX;
     y -= zeros.zeroY;
     x /= logicalScaling;
     y /= logicalScaling;
-    return {x,y};
+    return { x, y };
 
     // return {x:0,y:0}
   }
