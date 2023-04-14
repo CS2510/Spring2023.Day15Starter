@@ -12,6 +12,7 @@ import "./Text.js"
 import "./Vector2.js"
 import "./Time.js"
 import "./Input.js"
+import "./CameraMover.js"
 
 class EngineGlobals{
     static requestedAspectRatio = 16/9;
