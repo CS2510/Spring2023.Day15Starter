@@ -233,11 +233,11 @@ function draw() {
     //Map/Reduce
     let min = scene.gameObjects.filter(go=>go.components.some(c=>c.draw))
     .map(go => go.layer)
-    .reduce((previous, current)=>Math.min(previous, current))
+    .reduce((previous, current)=>Math.min(previous, current),0)
 
     let max = scene.gameObjects.filter(go=>go.components.some(c=>c.draw))
     .map(go => go.layer)
-    .reduce((previous, current)=>Math.max(previous, current))
+    .reduce((previous, current)=>Math.max(previous, current),0)
 
     //Loop through the components and draw them.
     for (let i = min; i <= max; i++) {
@@ -279,11 +279,11 @@ function draw() {
 
      min = scene.gameObjects.filter(go=>go.components.some(c=>c.drawGUI))
     .map(go => go.layer)
-    .reduce((previous, current)=>Math.min(previous, current))
+    .reduce((previous, current)=>Math.min(previous, current),0)
 
      max = scene.gameObjects.filter(go=>go.components.some(c=>c.drawGUI))
     .map(go => go.layer)
-    .reduce((previous, current)=>Math.max(previous, current))
+    .reduce((previous, current)=>Math.max(previous, current),0)
 
     //Loop through the components and draw them.
     ctx.save();
