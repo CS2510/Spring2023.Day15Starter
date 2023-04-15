@@ -47,6 +47,15 @@ class Input{
     Input.lastWheel = 0;
   }
 
+  /**
+   * Boot the Input class.
+   * <p>
+   * This attached listeners to all the major UI events.
+   * Do not call this multiple times. That would lead to multiple 
+   * events being fired when there should only be one.
+   * </p>
+   */
+  //TODO: Prevent the user from calling this multiple times
   static start(){
     //Grab a reference to our canvas
     let canvas = document.querySelector("#canv")
@@ -61,7 +70,8 @@ class Input{
       // console.log("  " + Input.lastMouseX + ", " + Input.lastMouseY + " " + Input.mouseX + ", " + Input.mouseY)
     });
 
-    //Add the mousedown event to the canvas. See https://developer.mozilla.org/en-US/docs/Web/API/Element/mousedown_event
+    //Add the mousedown event to the canvas. 
+    //See https://developer.mozilla.org/en-US/docs/Web/API/Element/mousedown_event
     canvas.addEventListener("mousedown", (e) => {
       Input.lastMouseX = Input.mouseX;
       Input.lastMouseY = Input.mouseY;
@@ -71,7 +81,8 @@ class Input{
       Input.mouseDown = true;
       });
 
-    //Add the mouseup event to the canvas. See https://developer.mozilla.org/en-US/docs/Web/API/Element/mouseup_event
+    //Add the mouseup event to the canvas. 
+    //See https://developer.mozilla.org/en-US/docs/Web/API/Element/mouseup_event
     canvas.addEventListener("mouseup", (e) => { 
       Input.lastMouseX = Input.mouseX;
       Input.lastMouseY = Input.mouseY;
@@ -88,7 +99,8 @@ class Input{
       Input.lastWheel = e.deltaY;
      });
 
-     //Add the keyup event to the canvas. See  https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
+     //Add the keyup event to the canvas. 
+     //See https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
     document.addEventListener("keyup", (e) => {  });
 
     //Add the keydown event to the canvas. 
@@ -97,7 +109,8 @@ class Input{
     //See  https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event.
     document.addEventListener("keydown", (e) => {  });
     
-    //Add the keypress event to the canvas. See https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
+    //Add the keypress event to the canvas. 
+    //See https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
     document.addEventListener("keypress", (e) => { });
 
     //Add the touchstart event to the canvas.
@@ -123,5 +136,6 @@ class Input{
   }
 }
 
+//Attach Input to the global window variable
 window.Input = Input;
 export default Input;
