@@ -8,6 +8,12 @@ class Scene {
   /** List of game objects in the scene */
   gameObjects = []
 
+  /**
+   * Create a new instance of a scene.
+   * 
+   * TODO: Remove this parameter
+   * @param {Color} fillStyle The background color of the scene. This is deprecated as the Camera now controlls the background.
+   */
   constructor(fillStyle){
     this.addGameObject(new GameObject("CameraGameObject").addComponent(new Camera(fillStyle)))
   }
@@ -52,4 +58,5 @@ class Scene {
   }
 }
 
+//Add Scene to the global window object.
 window.Scene = Scene;
