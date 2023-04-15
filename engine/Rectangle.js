@@ -1,5 +1,5 @@
 /**
- * A circle engine-level component
+ * A rectangle engine-level component
  */
 class Rectangle extends Component {
   /** The name of the component */
@@ -14,6 +14,12 @@ class Rectangle extends Component {
   /** The width of the stroke */
   lineWidth
 
+  /**
+   * 
+   * @param {Color} fillStyle The fill color of the object. Defaults to "white." Set to "transparent" if no fill is desired.
+   * @param {Color} strokeStyle The stroke color of the object. Defaults to "transparent."
+   * @param {Number} lineWidth The width of the stroke.
+   */
   constructor(fillStyle = "white", strokeStyle = "transparent", lineWidth = 1){
     super()
     this.fillStyle = fillStyle;
