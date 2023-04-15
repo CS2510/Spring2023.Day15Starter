@@ -15,7 +15,8 @@ class Text extends Component {
   /**
    * Create a text component. 
    * Has an optional color for fillStyle
-   * @param {Color} fillStyle 
+   * @param {Color} fillStyle The fill style of the text. Defaults to "white".
+   * @param {Font} font The font to use. Defaults to "20px Arial".
    */
   constructor(string, fillStyle = "white", font="20px Arial") {
     super();
@@ -36,5 +37,5 @@ class Text extends Component {
   }
 }
 
-//Add text to the global namespace.
+//Add text to the global window object.
 window.Text = Text;

@@ -26,5 +26,6 @@ class Time{
   }
 }
 
+//Add Time to the global window object.
 window.Time = Time
 export default Time;

@@ -50,4 +50,5 @@ class Transform extends Component{
   }
 }
 
+//Add Transform to the global window object.
 window.Transform = Transform;
