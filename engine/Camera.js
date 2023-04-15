@@ -64,8 +64,6 @@ class Camera extends Component {
       zeroX = (ctx.canvas.width - ctx.canvas.height * EngineGlobals.requestedAspectRatio) / 2;
 
     return { zeroX, zeroY };
-
-    // return {zeroX:0, zeroY:0}
   }
 
   /**
@@ -92,23 +90,15 @@ class Camera extends Component {
     y /= Camera.main.transform.sy;
 
     return { x, y };
-
-    ctx.save()
-    ctx.translate(-ctx.canvas.width/2,ctx.canvas.height/2)
-    ctx.scale(1/logicalScaling,1/logicalScaling);
-    ctx.translate(Camera.main.transform.x,Camera.main.transform.y);
-    ctx.scale(1/Camera.main.transform.sx, 1/Camera.main.transform.sy)
-
-    let m = ctx.getTransform();
-    let mx = x * m.m11 + y * m.m21 + m.m41;
-    let my = x * m.m12 + y * m.m22 + m.m42; 
-    ctx.restore()
-
-    return { x:mx, y:my };
-
-    // return {x:0,y:0};
   }
 
+  /**
+   * 
+   * @param {Number} x The x location in world space
+   * @param {Number} y The y location in world space
+   * @param {CanvasDrawingContext2D} ctx The drawing context to use
+   * @returns 
+   */
   static worldToLogicalScreenSpace(x, y, ctx) {
 
     let logicalScaling = Camera.getLogicalScale(ctx);
@@ -149,18 +139,6 @@ class Camera extends Component {
     y /= logicalScaling;
 
     return {x,y};
-
-    // ctx.save();
-    // ctx.translate(-zeros.zeroX,-zeros.zeroY)
-    // ctx.scale(1/logicalScaling,1/logicalScaling)
-
-    // let m = ctx.getTransform();
-    // let mx = x * m.m11 + y * m.m21 + m.m41;
-    // let my = x * m.m12 + y * m.m22 + m.m42; 
-    // ctx.restore()
-
-    // return { x:mx, y:my };
-
   }
 
   /**
