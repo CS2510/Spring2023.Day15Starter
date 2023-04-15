@@ -102,41 +102,26 @@ class Camera extends Component {
     let zeros = Camera.getZeros(ctx);
 
 
+    ctx.save();
+    ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2)
+    ctx.scale(logicalScaling, logicalScaling)
 
-    x += ctx.canvas.width / 2;
-    y += ctx.canvas.height / 2;
+    ctx.translate(-Camera.main.transform.x, -Camera.main.transform.y)
+    ctx.scale(Camera.main.transform.sx, Camera.main.transform.sy);
 
-    x *= logicalScaling;
-    y *= logicalScaling;
+    let m = ctx.getTransform();
+    let mx = x * m.m11 + y * m.m21 + m.m41;
+    let my = x * m.m12 + y * m.m22 + m.m42; 
+    ctx.restore()
+    
+    
+    
 
-    x -= Camera.main.transform.x;
-    y -= Camera.main.transform.y;
+    let logical = Camera.screenToLogicalScreenSpace(mx, my, ctx);
+    
 
-    x *= Camera.main.transform.sx;
-    y *= Camera.main.transform.sy;
-
-    x /= logicalScaling;
-    y /= logicalScaling
-
-    x -= zeros.zeroX;
-    y -= zeros.zeroY;
-
-   // let logical = Camera.screenToLogicalScreenSpace(x, y, ctx);
-
-
-    //return {x,y}
-    return {x:x,y:50/(16/9)}
-    return { x: logical.x, y: logical.y }
-    // x += EngineGlobals.logicalWidth / 2 
-    // y += EngineGlobals.logicalWidth / 2 
-
-    // x /= 1;
-    // y /= EngineGlobals.requestedAspectRatio
-
-    // x -= Camera.main.transform.x
-    // y -= Camera.main.transform.y
-    // return {x,y}
-
+    let toReturn = { x: logical.x, y: logical.y }
+    return toReturn
   }
 
   /**

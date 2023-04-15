@@ -66,6 +66,14 @@ class EventComponent extends Component {
   }
 }
 
+class CameraDisplacer extends Component{
+  start(){
+    Camera.main.transform.x = -5;
+    Camera.main.transform.sx = 1.0;
+    Camera.main.transform.sy = 1.0;
+  }
+}
+
 class EventScene extends Scene {
   start() {
     this.addGameObject(
@@ -123,6 +131,8 @@ class EventScene extends Scene {
       new GameObject("MoverGameObject")
         .addComponent(new MoverComponent())
         .addComponent(new Rectangle("red"))
+        .addComponent(new CameraMover())
+        .addComponent(new CameraDisplacer())
     );
 
     this.addGameObject(
