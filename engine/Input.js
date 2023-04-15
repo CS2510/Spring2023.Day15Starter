@@ -97,7 +97,7 @@ class Input{
     //See  https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event.
     document.addEventListener("keydown", (e) => {  });
     
-    //Add the keypress event to the canvas. See  https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
+    //Add the keypress event to the canvas. See https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
     document.addEventListener("keypress", (e) => { });
 
     //Add the touchstart event to the canvas.
@@ -116,7 +116,6 @@ class Input{
     canvas.addEventListener("touchmove", (e) => { 
       for(let touchEvent of e.touches){
         console.log(touchEvent.clientX + ", " + touchEvent.clientX);
-        // console.log(touchEvent);
       }
       e.preventDefault(); 
     })
