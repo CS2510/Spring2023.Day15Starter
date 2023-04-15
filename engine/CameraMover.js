@@ -4,11 +4,14 @@ class CameraMover extends Component {
     update(ctx) {
       let camera = Camera.main;
       if (Input.mouseDown) {
+
         let offsetX = Input.lastMouseX - Input.mouseX;
         let offsetY = Input.lastMouseY - Input.mouseY;
         let scale = Camera.getLogicalScale(ctx);
         camera.transform.x += offsetX / scale;
         camera.transform.y += offsetY / scale;
+
+        console.log(Input.lastMouseX + ", " + Input.lastMouseY + " " + Input.mouseX + ", " + Input.mouseY + " " +offsetX + ", " + offsetY)
       }
   
       if (Input.lastWheel) {

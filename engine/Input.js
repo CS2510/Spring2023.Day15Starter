@@ -15,18 +15,29 @@ class Input{
   static start(){
     let canvas = document.querySelector("#canv")
     canvas.addEventListener("mousemove", (e) => { 
-      console.log(e.clientX + ", " + e.clientY) 
+      // console.log(e.clientX + ", " + e.clientY) 
 
       Input.lastMouseX = Input.mouseX;
       Input.lastMouseY = Input.mouseY;
 
       Input.mouseX = e.clientX
       Input.mouseY = e.clientY
+      console.log("  " + Input.lastMouseX + ", " + Input.lastMouseY + " " + Input.mouseX + ", " + Input.mouseY)
     });
     canvas.addEventListener("mousedown", (e) => {
+      Input.lastMouseX = Input.mouseX;
+      Input.lastMouseY = Input.mouseY;
+
+      Input.mouseX = e.clientX
+      Input.mouseY = e.clientY
       Input.mouseDown = true;
       });
     canvas.addEventListener("mouseup", (e) => { 
+      Input.lastMouseX = Input.mouseX;
+      Input.lastMouseY = Input.mouseY;
+
+      Input.mouseX = e.clientX
+      Input.mouseY = e.clientY
       Input.mouseDown = false;
      });
 
