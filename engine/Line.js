@@ -1,5 +1,5 @@
 /**
- * A circle engine-level component
+ * A line engine-level component
  */
 class Line extends Component {
   /** The name of the component */
@@ -11,6 +11,11 @@ class Line extends Component {
   /** The width of the stroke */
   lineWidth
 
+  /**
+   * Creates a new instance of this line component.
+   * @param {Color} strokeStyle The color of the stroke
+   * @param {Number} lineWidth The width of the stroke.
+   */
   constructor(strokeStyle = "transparent", lineWidth = 1){
     super()
     this.strokeStyle = strokeStyle
