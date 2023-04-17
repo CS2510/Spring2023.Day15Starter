@@ -13,17 +13,55 @@ class CameraMover extends Component {
    * 
    * @param {CanvasRenderingContext2D} ctx The drawing context.
    */
+  first = false;
+  second = false;
+  third = false;
   update(ctx) {
+
+    if (this.first) {
+      let evt = new MouseEvent("mousemove", {
+        clientX: 100,
+        clientY: 100,
+        bubbles: true,
+      });
+      ctx.canvas.dispatchEvent(evt)
+      this.first = false;
+      this.second = true;
+    }
+    else if(this.second){
+      let evt = new MouseEvent("mousedown",{
+        clientX:100,
+        clientY:200
+      });
+      ctx.canvas.dispatchEvent(evt);
+      this.second = false;
+      this.third = true;
+    }else{
+      let evt = new MouseEvent("mouseup",{
+        clientX:100,
+        clientY:200,
+      })
+      ctx.canvas.dispatchEvent(evt);
+      this.third = false;
+    }
+
+    
     //Get a reference to the main camera component
     let camera = Camera.main;
+    console.log(camera.transform.x + ", " + camera.transform.y)
 
     //Update based on whether the mouse button is down
     if (Input.mouseDown) {
       let offsetX = Input.lastMouseX - Input.mouseX;
       let offsetY = Input.lastMouseY - Input.mouseY;
-      let scale = Camera.getLogicalScale(ctx);
-      camera.transform.x += offsetX / scale;
-      camera.transform.y += offsetY / scale;
+      if(Math.abs(offsetX) > 1 || Math.abs(offsetY) > 1)
+      console.log("Big")
+      if (offsetX || offsetY) {
+        console.log(`${offsetX}, ${offsetY}`)
+        let scale = Camera.getLogicalScale(ctx);
+        camera.transform.x += offsetX / scale;
+        camera.transform.y += offsetY / scale;
+      }
 
       // console.log(Input.lastMouseX + ", " + Input.lastMouseY + " " + Input.mouseX + ", " + Input.mouseY + " " + offsetX + ", " + offsetY)
     }
