@@ -66,6 +66,7 @@ class Input {
 
     //Add the mousemove event to the canvas. See https://developer.mozilla.org/en-US/docs/Web/API/Element/mousemove_event
     canvas.addEventListener("mousemove", (e) => {
+      console.log(e.clientX + "," + e.clientY)
 
       // if (Input.mouseDown)
       //   console.log("  " + Input.lastMouseX + ", " + Input.lastMouseY + " " + Input.mouseX + ", " + Input.mouseY)
@@ -95,11 +96,12 @@ class Input {
     canvas.addEventListener("mouseup", (e) => {
       Input.lastMouseX = Input.mouseX;
       Input.lastMouseY = Input.mouseY;
-
       Input.mouseX = e.clientX
       Input.mouseY = e.clientY
       Input.mouseDown = false;
     });
+
+    
 
 
     //Add the wheel event to the canvas. Notably, we do not listen for the deprecated mousewheel event.

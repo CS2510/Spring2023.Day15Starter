@@ -13,49 +13,76 @@ class CameraMover extends Component {
    * 
    * @param {CanvasRenderingContext2D} ctx The drawing context.
    */
-  first = false;
+  first = true;
   second = false;
   third = false;
-  update(ctx) {
+  x = 0;
+  y = 0;
+  dx = 0;
+  dy = 0;
 
+  start(){
+    // this.fakeMouse(0,0,100);
+  }
+
+  fakeMouse( x, y, dx, dy){
+    this.first = true;
+    this.second = false;
+    this.third = false;
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+  }
+
+  updateFakeMouse(ctx){
     if (this.first) {
       let evt = new MouseEvent("mousemove", {
-        clientX: 100,
-        clientY: 100,
+        clientX: this.x,
+        clientY: this.y,
         bubbles: true,
       });
       ctx.canvas.dispatchEvent(evt)
       this.first = false;
+      this.third = false;
       this.second = true;
     }
     else if(this.second){
       let evt = new MouseEvent("mousedown",{
-        clientX:100,
-        clientY:200
+        clientX:this.dx,
+        clientY:this.dy
       });
       ctx.canvas.dispatchEvent(evt);
       this.second = false;
+      this.first = false;
       this.third = true;
-    }else{
+    }else if(this.third){
       let evt = new MouseEvent("mouseup",{
-        clientX:100,
-        clientY:200,
+        clientX:this.dx,
+        clientY:this.dy,
       })
       ctx.canvas.dispatchEvent(evt);
+      this.first = false;
+      this.second = false;
       this.third = false;
     }
+  }
+  update(ctx) {
+
+    this.updateFakeMouse(ctx);
+    
 
     
     //Get a reference to the main camera component
     let camera = Camera.main;
-    console.log(camera.transform.x + ", " + camera.transform.y)
+    // console.log(camera.transform.x + ", " + camera.transform.y)
 
     //Update based on whether the mouse button is down
     if (Input.mouseDown) {
       let offsetX = Input.lastMouseX - Input.mouseX;
       let offsetY = Input.lastMouseY - Input.mouseY;
       if(Math.abs(offsetX) > 1 || Math.abs(offsetY) > 1)
-      console.log("Big")
+      
       if (offsetX || offsetY) {
         console.log(`${offsetX}, ${offsetY}`)
         let scale = Camera.getLogicalScale(ctx);
