@@ -45,6 +45,17 @@ class Camera extends Component {
 
   }
 
+  static getLogicalScaleZoomable(ctx) {
+    let browserAspectRatio = ctx.canvas.width / ctx.canvas.height;
+    let browserWidth = ctx.canvas.width
+    if (EngineGlobals.requestedAspectRatio <= browserAspectRatio)
+      browserWidth -= (ctx.canvas.width - ctx.canvas.height * EngineGlobals.requestedAspectRatio)
+
+    return browserWidth / EngineGlobals.logicalWidth * Camera.main.transform.sx;
+    // return 1;
+
+  }
+
   /**
    * Figure out the offset in screen space that we need if we are going
    * to draw to the "screen" after considering the letterboxing.
@@ -75,7 +86,7 @@ class Camera extends Component {
    * @returns The coordinate in world space that is drawn to that screen space pixel
    */
   static screenToWorldSpace(x, y, ctx) {
-    let logicalScaling = Camera.getLogicalScale(ctx);
+    let logicalScaling = Camera.getLogicalScaleZoomable(ctx);
 
     x -= ctx.canvas.width / 2;
     y -= ctx.canvas.height / 2;
@@ -83,11 +94,12 @@ class Camera extends Component {
     x /= logicalScaling;
     y /= logicalScaling;
 
+    x *= Camera.main.transform.sx;
+    y *= Camera.main.transform.sy;
+
     x += Camera.main.transform.x;
     y += Camera.main.transform.y;
 
-    x /= Camera.main.transform.sx;
-    y /= Camera.main.transform.sy;
 
     return { x, y };
   }
@@ -107,8 +119,8 @@ class Camera extends Component {
     ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2)
     ctx.scale(logicalScaling, logicalScaling)
 
-    ctx.translate(-Camera.main.transform.x, -Camera.main.transform.y)
     ctx.scale(Camera.main.transform.sx, Camera.main.transform.sy);
+    ctx.translate(-Camera.main.transform.x, -Camera.main.transform.y)
 
     let m = ctx.getTransform();
     let mx = x * m.m11 + y * m.m21 + m.m41;

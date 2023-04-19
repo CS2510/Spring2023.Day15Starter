@@ -30,8 +30,8 @@ class FollowerComponent extends Component {
     // this.transform.y -= Camera.main.transform.y;
 
     let coordinates = Camera.worldToLogicalScreenSpace(moverComponent.transform.x,moverComponent.transform.y,ctx);
-    this.transform.x = coordinates.x;
-    this.transform.y = coordinates.y
+    this.transform.x = coordinates.x / Camera.main.transform.sx;
+    this.transform.y = coordinates.y /Camera.main.transform.sy;
 
 
     // this.transform.x = moverComponent.transform.x + 50;
@@ -60,8 +60,8 @@ class EventComponent extends Component {
 
 
     let worldSpace = Camera.screenToWorldSpace(Input.mouseX, Input.mouseY, ctx)
-    this.transform.x = worldSpace.x;
-    this.transform.y = worldSpace.y;
+    this.transform.x = worldSpace.x / Camera.main.transform.sx ;
+    this.transform.y = worldSpace.y / Camera.main.transform.sy;
     // console.log(Input.mouseX + ", " + Input.mouseY + "-> " + x + ", " + y)
   }
 }

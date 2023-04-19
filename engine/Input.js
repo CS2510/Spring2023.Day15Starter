@@ -47,6 +47,7 @@ class Input {
     Input.lastWheel = 0;
     Input.lastMouseX = Input.mouseX;
     Input.lastMouseY = Input.mouseY;
+    Input.tick = 0;
   }
 
   /**
@@ -59,23 +60,26 @@ class Input {
    */
   //TODO: Prevent the user from calling this multiple times
 
-  static tick = 0;
   static start() {
     //Grab a reference to our canvas
     let canvas = document.querySelector("#canv")
 
     //Add the mousemove event to the canvas. See https://developer.mozilla.org/en-US/docs/Web/API/Element/mousemove_event
     canvas.addEventListener("mousemove", (e) => {
-      console.log(e.clientX + "," + e.clientY)
+      // console.log(e.clientX + "," + e.clientY)
 
       // if (Input.mouseDown)
       //   console.log("  " + Input.lastMouseX + ", " + Input.lastMouseY + " " + Input.mouseX + ", " + Input.mouseY)
 
-      Input.lastMouseX = Input.mouseX;
-      Input.lastMouseY = Input.mouseY;
+      // Input.lastMouseX = Input.mouseX;
+      // Input.lastMouseY = Input.mouseY;
 
       Input.mouseX = e.clientX
       Input.mouseY = e.clientY
+
+      // Input.mouseX = 1024
+      // Input.mouseY = 541
+      // console.log(Input.tick++);
       // if (Input.mouseDown)
       //   console.log("  " + Input.lastMouseX + ", " + Input.lastMouseY + " " + Input.mouseX + ", " + Input.mouseY)
     });

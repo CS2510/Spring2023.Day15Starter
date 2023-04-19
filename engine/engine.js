@@ -207,12 +207,13 @@ function draw() {
     let scene = SceneManager.getActiveScene()
 
     ctx.save();
-    let logicalScaling = browserWidth / EngineGlobals.logicalWidth
+    // let logicalScaling = browserWidth / EngineGlobals.logicalWidth * Camera.main.transform.sx;
+    let logicalScaling = Camera.getLogicalScaleZoomable(ctx);
     ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2)
     ctx.scale(logicalScaling, logicalScaling)
 
+    //ctx.scale(Camera.main.transform.sx, Camera.main.transform.sy);
     ctx.translate(-Camera.main.transform.x, -Camera.main.transform.y)
-    ctx.scale(Camera.main.transform.sx, Camera.main.transform.sy);
 
 
     //Calculate the min and max layer
@@ -262,7 +263,7 @@ function draw() {
     }
 
     //Now draw any UI. Note we do this after we draw the letterboxes.
-
+    logicalScaling = Camera.getLogicalScaleZoomable(ctx);
      min = scene.gameObjects.filter(go=>go.components.some(c=>c.drawGUI))
     .map(go => go.layer)
     .reduce((previous, current)=>Math.min(previous, current),0)
@@ -287,6 +288,33 @@ function draw() {
         }
     }
     ctx.restore();
+
+    //Now draw directly on the screen
+    ctx.save();
+    min = scene.gameObjects.filter(go=>go.components.some(c=>c.drawScreen))
+    .map(go => go.layer)
+    .reduce((previous, current)=>Math.min(previous, current),0)
+
+     max = scene.gameObjects.filter(go=>go.components.some(c=>c.drawScreen))
+    .map(go => go.layer)
+    .reduce((previous, current)=>Math.max(previous, current),0)
+
+    //Loop through the components and draw them.
+    ctx.save();
+    for (let i = min; i <= max; i++) {
+        let gameObjects = scene.gameObjects.filter(go=>go.layer==i)
+
+        for (let gameObject of gameObjects) {
+            for (let component of gameObject.components) {
+                if (component.drawScreen) {
+                    component.drawScreen(ctx)
+                }
+            }
+        }
+    }
+    ctx.restore();
+
+
 
     
 
