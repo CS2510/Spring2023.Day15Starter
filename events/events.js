@@ -17,32 +17,16 @@ class FollowerComponent extends Component {
   update(ctx) {
     let moverComponent = GameObject.getObjectByName("MoverGameObject").getComponent("MoverComponent");
 
-    // this.transform.x *= Camera.main.transform.sx;
-    // this.transform.y *= Camera.main.transform.sy;
-
-    // this.transform.x = moverComponent.transform.x
-    // this.transform.y = moverComponent.transform.y
-    
-    // this.transform.x += EngineGlobals.logicalWidth / 2
-    // this.transform.y += EngineGlobals.logicalWidth / 2 / EngineGlobals.requestedAspectRatio
-    
-    // this.transform.x -= Camera.main.transform.x;
-    // this.transform.y -= Camera.main.transform.y;
-
     let coordinates = Camera.worldToLogicalScreenSpace(moverComponent.transform.x,moverComponent.transform.y,ctx);
-    this.transform.x = coordinates.x / Camera.main.transform.sx;
-    this.transform.y = coordinates.y /Camera.main.transform.sy;
-
-
-    // this.transform.x = moverComponent.transform.x + 50;
-    // this.transform.y = moverComponent.transform.y + 50 /(16/9);
+    this.transform.x = coordinates.x ;
+    this.transform.y = coordinates.y ;
   }
 }
 
 class GUIMouseFollowerComponent extends Component {
   update(ctx) {
 
-    let screenSpace = Camera.screenToLogicalScreenSpace(Input.mouseX, Input.mouseY, ctx);
+    let screenSpace = Camera.screenToLogical(ctx,Input.mouseX, Input.mouseY, ctx);
     this.transform.x = screenSpace.x;
     this.transform.y = screenSpace.y;
 
@@ -54,14 +38,9 @@ class EventComponent extends Component {
   start() {
   }
   update(ctx) {
-    //First adjust the camera for debugging
-    // Camera.main.transform.x = Math.sin(Time.time) * 10;
-    // Camera.main.transform.y = Math.sin(Time.time) * 10;
-
-
-    let worldSpace = Camera.screenToWorldSpace(Input.mouseX, Input.mouseY, ctx)
-    this.transform.x = worldSpace.x / Camera.main.transform.sx ;
-    this.transform.y = worldSpace.y / Camera.main.transform.sy;
+    let worldSpace = Camera.screenToWorld(ctx, Input.mouseX, Input.mouseY, ctx)
+    this.transform.x = worldSpace.x ;
+    this.transform.y = worldSpace.y ;
     // console.log(Input.mouseX + ", " + Input.mouseY + "-> " + x + ", " + y)
   }
 }
@@ -76,22 +55,22 @@ class CameraDisplacer extends Component{
 
 class EventScene extends Scene {
   start() {
-    this.addGameObject(
-      new GameObject("GUIRectangle")
-        .addComponent(new GUIRectangle("pink")),
-      Vector2.zero,
-      new Vector2(2, 2),
-      0,
-      1
-    )
-    this.addGameObject(
-      new GameObject("GUIRectangle")
-        .addComponent(new GUIRectangle("green")),
-      Vector2.zero,
-      new Vector2(4, 4),
-      0,
-      0
-    )
+    // this.addGameObject(
+    //   new GameObject("GUIRectangle")
+    //     .addComponent(new GUIRectangle("pink")),
+    //   Vector2.zero,
+    //   new Vector2(2, 2),
+    //   0,
+    //   1
+    // )
+    // this.addGameObject(
+    //   new GameObject("GUIRectangle")
+    //     .addComponent(new GUIRectangle("green")),
+    //   Vector2.zero,
+    //   new Vector2(4, 4),
+    //   0,
+    //   0
+    // )
     this.addGameObject(
       new GameObject("GUIRectangle")
         .addComponent(new GUIMouseFollowerComponent())

@@ -34,13 +34,16 @@ class CameraMover extends Component {
       // camera.transform.y += offsetY / scale;
       // camera.transform.x += offsetX / scale;
       // camera.transform.y += offsetY / scale;
-      console.log(camera.transform.y)
+      // console.log(camera.transform.y)
+
+      camera.transform.x = 20;
+      camera.transform.y = 0;
 
 
 
       return
     }
-    console.log(Input.mouseX + ", " + Input.mouseY + " " + ctx.canvas.height);
+    // console.log(Input.mouseX + ", " + Input.mouseY + " " + ctx.canvas.height);
 
 
     //Update based on whether the mouse button is down
@@ -52,10 +55,11 @@ class CameraMover extends Component {
         if (offsetX || offsetY) {
           console.log(`${offsetX}, ${offsetY}, ${camera.transform.x}, ${camera.transform.y}`)
           let scale = Camera.getLogicalScaleZoomable(ctx);
-          camera.transform.x += offsetX / scale;
-          camera.transform.y += offsetY / scale;
-          // camera.transform.x += offsetX / scale;
-          // camera.transform.y += offsetY / scale;
+
+          let done = Camera.screenToWorld(ctx, offsetX, offsetY)
+
+          camera.transform.x += offsetX/scale;
+          camera.transform.y += offsetY/scale;
         }
 
       // console.log(Input.lastMouseX + ", " + Input.lastMouseY + " " + Input.mouseX + ", " + Input.mouseY + " " + offsetX + ", " + offsetY)

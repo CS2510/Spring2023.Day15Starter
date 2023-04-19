@@ -263,7 +263,7 @@ function draw() {
     }
 
     //Now draw any UI. Note we do this after we draw the letterboxes.
-    logicalScaling = Camera.getLogicalScaleZoomable(ctx);
+    logicalScaling = Camera.getLogicalScale(ctx);
      min = scene.gameObjects.filter(go=>go.components.some(c=>c.drawGUI))
     .map(go => go.layer)
     .reduce((previous, current)=>Math.min(previous, current),0)

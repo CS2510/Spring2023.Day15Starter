@@ -124,11 +124,11 @@ class Camera extends Component {
 
     let m = ctx.getTransform();
     let mx = x * m.m11 + y * m.m21 + m.m41;
-    let my = x * m.m12 + y * m.m22 + m.m42; 
+    let my = x * m.m12 + y * m.m22 + m.m42;
     ctx.restore()
-    
+
     let logical = Camera.screenToLogicalScreenSpace(mx, my, ctx);
-    
+
     let toReturn = { x: logical.x, y: logical.y }
     return toReturn
   }
@@ -150,7 +150,85 @@ class Camera extends Component {
     x /= logicalScaling;
     y /= logicalScaling;
 
-    return {x,y};
+    return { x, y };
+  }
+
+  static screenToWorld(ctx, x, y) {
+    let rx, ry;
+
+    let sx, sy;
+    sx = Camera.getLogicalScaleZoomable(ctx);
+    sy = sx;
+
+    rx = x - ctx.canvas.width/2;
+    ry = y - ctx.canvas.height/2;
+
+    rx /= sx;
+    ry /= sy;
+
+    rx += Camera.main.transform.x;
+    ry += Camera.main.transform.y;
+
+
+
+
+    return { x: rx, y: ry };
+
+  }
+
+  
+
+  static worldToScreenSpace(ctx, x, y) {
+    let sx, sy;
+    sx = Camera.getLogicalScaleZoomable(ctx);
+    sy = sx;
+    let rx;
+    let ry;
+
+    rx = x-Camera.main.transform.x;
+    ry = y-Camera.main.transform.y;
+
+    rx *= sx;
+    ry *= sy;
+
+    rx += ctx.canvas.width/2;
+    ry += ctx.canvas.height/2;
+
+    return { x: rx, y: ry };
+  }
+
+  static screenToLogical(ctx, x, y) {
+    let zx, zy;
+    let zeros = Camera.getZeros(ctx)
+    zx = zeros.zeroX;
+    zy = zeros.zeroY;
+
+    let sx, sy;
+    sx = Camera.getLogicalScale(ctx);
+    sy = sx;
+
+    return {x:(x-zx)/sx,y:(y-zy)/sy}
+  }
+
+  static logicalToScreenSpace(ctx, x, y) {
+
+    let zx, zy;
+    let zeros = Camera.getZeros(ctx)
+    zx = zeros.zeroX;
+    zy = zeros.zeroY;
+
+    let sx, sy;
+    sx = Camera.getLogicalScale(ctx);
+    sy = sx;
+
+
+    let rx;
+    let ry;
+
+    rx = x * sx + zx;
+    ry = y * sy + zy;
+
+    return { x: rx, y: ry };
   }
 
   /**
