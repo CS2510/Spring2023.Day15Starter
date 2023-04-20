@@ -15,7 +15,7 @@ class MoverComponent extends Component {
  */
 class FollowerComponent extends Component {
   update(ctx) {
-    let moverComponent = GameObject.getObjectByName("MoverGameObject").getComponent("MoverComponent");
+    let moverComponent = GameObject.getObjectByName("MovingWorldSpaceGameObject").getComponent("MoverComponent");
 
     let coordinates = Camera.worldToLogicalScreenSpace(moverComponent.transform.x,moverComponent.transform.y,ctx);
     this.transform.x = coordinates.x ;
@@ -23,7 +23,7 @@ class FollowerComponent extends Component {
   }
 }
 
-class GUIMouseFollowerComponent extends Component {
+class MouseFollowingGUIComponent extends Component {
   update(ctx) {
 
     let screenSpace = Camera.screenToLogical(ctx,Input.mouseX, Input.mouseY, ctx);
@@ -34,7 +34,7 @@ class GUIMouseFollowerComponent extends Component {
   }
 }
 
-class EventComponent extends Component {
+class MouseFollowingWorldSpaceComponent extends Component {
   start() {
   }
   update(ctx) {
@@ -55,44 +55,18 @@ class CameraDisplacer extends Component{
 
 class EventScene extends Scene {
   start() {
-    // this.addGameObject(
-    //   new GameObject("GUIRectangle")
-    //     .addComponent(new GUIRectangle("pink")),
-    //   Vector2.zero,
-    //   new Vector2(2, 2),
-    //   0,
-    //   1
-    // )
-    // this.addGameObject(
-    //   new GameObject("GUIRectangle")
-    //     .addComponent(new GUIRectangle("green")),
-    //   Vector2.zero,
-    //   new Vector2(4, 4),
-    //   0,
-    //   0
-    // )
+
     this.addGameObject(
-      new GameObject("GUIRectangle")
-        .addComponent(new GUIMouseFollowerComponent())
+      new GameObject("MouseFollowingWorldSpaceGameObject")
+        .addComponent(new MouseFollowingWorldSpaceComponent())
+        .addComponent(new Rectangle("blue"))
+        .addComponent(new CameraMover())
+    )
+
+    this.addGameObject(
+      new GameObject("MouseFollowingGUIGameObject")
+        .addComponent(new MouseFollowingGUIComponent())
         .addComponent(new GUIRectangle("transparent", "blue", .5)),
-      Vector2.zero,
-      new Vector2(4, 4),
-      0,
-      0
-    )
-
-    this.addGameObject(
-      new GameObject("StaticRectangle")
-        .addComponent(new Rectangle("brown")),
-      Vector2.zero,
-      Vector2.one,
-      0,
-      1
-    )
-
-    this.addGameObject(
-      new GameObject("StaticRectangle")
-        .addComponent(new Rectangle("magenta")),
       Vector2.zero,
       new Vector2(2, 2),
       0,
@@ -100,23 +74,36 @@ class EventScene extends Scene {
     )
 
     this.addGameObject(
-      new GameObject("EventGameObject")
-        .addComponent(new EventComponent())
-        .addComponent(new Rectangle("blue"))
-        .addComponent(new CameraMover())
+      new GameObject("OriginWorldSpaceGameObject")
+        .addComponent(new Rectangle("magenta")),
+      Vector2.zero,
+      Vector2.one,
+      0,
+      1
     )
 
     this.addGameObject(
-      new GameObject("MoverGameObject")
+      new GameObject("OriginGUIGameObject")
+        .addComponent(new Rectangle("transparent", "magenta", .5)),
+      Vector2.zero,
+      new Vector2(2, 2),
+      0,
+      0
+    )
+
+    
+
+    this.addGameObject(
+      new GameObject("MovingWorldSpaceGameObject")
         .addComponent(new MoverComponent())
-        .addComponent(new Rectangle("red"))
-        .addComponent(new CameraMover())
-        .addComponent(new CameraDisplacer())
+        .addComponent(new Rectangle("green"))
+        //.addComponent(new CameraMover())
+        // .addComponent(new CameraDisplacer())
     );
 
     this.addGameObject(
       new GameObject("FollowerGameObject")
-        .addComponent(new GUIRectangle("transparent", "green", 1))
+        .addComponent(new GUIRectangle("transparent", "green", .5))
         .addComponent(new FollowerComponent()),
       Vector2.zero,
       new Vector2(2, 2)

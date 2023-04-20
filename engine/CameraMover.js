@@ -56,10 +56,12 @@ class CameraMover extends Component {
           console.log(`${offsetX}, ${offsetY}, ${camera.transform.x}, ${camera.transform.y}`)
           let scale = Camera.getLogicalScaleZoomable(ctx);
 
-          let done = Camera.screenToWorld(ctx, offsetX, offsetY)
-
-          camera.transform.x += offsetX/scale;
-          camera.transform.y += offsetY/scale;
+          //let done = Camera.screenToWorld(ctx, offsetX, offsetY)
+          let start = Camera.screenToWorld(ctx, Input.mouseX, Input.mouseY);
+          let end = Camera.screenToWorld(ctx,Input.lastMouseX, Input.lastMouseY);
+          
+          camera.transform.x += end.x-start.x;
+          camera.transform.y += end.y -start.y;
         }
 
       // console.log(Input.lastMouseX + ", " + Input.lastMouseY + " " + Input.mouseX + ", " + Input.mouseY + " " + offsetX + ", " + offsetY)
