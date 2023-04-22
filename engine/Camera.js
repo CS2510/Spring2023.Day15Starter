@@ -8,6 +8,8 @@
  * 
  * The position of the camera is specified in this.transform.x and this.transform.y
  * The scale of the camera is specified in this.transform.sx
+ * 
+ * This class also has static functions for moving between spaces
  */
 class Camera extends Component {
   /** The name of the component */
@@ -45,6 +47,13 @@ class Camera extends Component {
 
   }
 
+  /**
+   * Get the scale that world objects use to compensate for
+   * logical space *and* the camera zoom.
+   * 
+   * @param {CanvasDrawingContext2D} ctx The drawing context
+   * @returns The scale that world objects use.
+   */
   static getLogicalScaleZoomable(ctx) {
     let browserAspectRatio = ctx.canvas.width / ctx.canvas.height;
     let browserWidth = ctx.canvas.width
@@ -52,15 +61,13 @@ class Camera extends Component {
       browserWidth -= (ctx.canvas.width - ctx.canvas.height * EngineGlobals.requestedAspectRatio)
 
     return browserWidth / EngineGlobals.logicalWidth * Camera.main.transform.sx;
-    // return 1;
-
   }
 
   /**
    * Figure out the offset in screen space that we need if we are going
    * to draw to the "screen" after considering the letterboxing.
    * 
-   * @param {CanvasDrawingContext2D} ctx 
+   * @param {CanvasDrawingContext2D} ctx The drawing context
    * @returns The x and y in screen space that is 0,0 after letterboxing
    */
   static getZeros(ctx) {
@@ -78,77 +85,153 @@ class Camera extends Component {
   }
 
 
+  /**
+   * Transition to move a coordinate in screen space
+   * to GUI space
+   * 
+   * @param {CanvasDrawingContext2D} ctx The drawing context
+   * @param {*} x The x location in screen space
+   * @param {*} y The y location in screen space
+   * @returns An object with the coordinate in GUI space
+   */
   static screenToGUI(ctx, x, y) {
-   let zeroes = Camera.getZeros(ctx)
-    
+    //Get the offset for any letter boxing
+    let zeroes = Camera.getZeros(ctx)
+
+    //Get the scale
     let sx = Camera.getLogicalScale(ctx);
     let sy = sx;
 
+    //Compensate for the letter boxes
     x -= zeroes.zeroX;
     y -= zeroes.zeroY;
 
+    //Componesate for the scale
     x /= sx;
     y /= sy;
 
-    return { x,y }
+    return { x, y }
   }
 
+  /**
+   * Transition to move a coordinate in screen space
+   * to worrld space
+   * 
+   * @param {CanvasDrawingContext2D} ctx The drawing context
+   * @param {*} x The x location in screen space
+   * @param {*} y The y location in screen space
+   * @returns An object with the coordinate in world space
+   */
   static screenToWorld(ctx, x, y) {
+    //Get the scale transition
     let sx = Camera.getLogicalScaleZoomable(ctx);
     let sy = sx;
 
-    x -= ctx.canvas.width/2;
-    y -= ctx.canvas.height/2
+    //Compensate for the origin in world space
+    x -= ctx.canvas.width / 2;
+    y -= ctx.canvas.height / 2
 
+    //Compensate for the scale
     x /= sx;
     y /= sy;
 
+    //Compensate for any camera offset
     x += Camera.main.transform.x;
     y += Camera.main.transform.y;
 
-    return {x,y}
+    return { x, y }
 
   }
 
+  /**
+   * Transition to move a coordinate in GUI space
+   * to screen space
+   * 
+   * @param {CanvasDrawingContext2D} ctx The drawing context
+   * @param {*} x The x location in GUI space
+   * @param {*} y The y location in GUI space
+   * @returns An object with the coordinate in screen space
+   */
   static GUIToScreen(ctx, x, y) {
-    
+
+    //Get the scale
     let logicalScale = Camera.getLogicalScale(ctx);
+
+    //Get the offset of any letter boxing
     let zeroes = Camera.getZeros(ctx, x, y)
-    
+
+    //Compensate for the scale
     x *= logicalScale;
     y *= logicalScale;
-    
+
+    //Compensate for the letter boxing
     x += zeroes.zeroX
     y += zeroes.zeroY;
 
-    return { x,y }
+    return { x, y }
   }
 
+  /**
+   * Transition to move a coordinate in GUI space
+   * to world space
+   * 
+   * @param {CanvasDrawingContext2D} ctx The drawing context
+   * @param {*} x The x location in GUI space
+   * @param {*} y The y location in GUI space
+   * @returns An object with the coordinate in world space
+   */
   static GUIToWorld(ctx, x, y) {
+    //Move into screen space
     let temp1 = Camera.GUIToScreen(ctx, x, y);
+    //The move into world space
     let temp2 = Camera.screenToWorld(ctx, temp1.x, temp1.y);
 
     return { x: temp2.x, y: temp2.y }
   }
 
+  /**
+   * Transition to move a coordinate in world space
+   * to screen space
+   * 
+   * @param {CanvasDrawingContext2D} ctx The drawing context
+   * @param {*} x The x location in world space
+   * @param {*} y The y location in world space
+   * @returns An object with the coordinate in screen space
+   */
   static worldToScreen(ctx, x, y) {
+    //Get any scaling
     let sx = Camera.getLogicalScaleZoomable(ctx);
     let sy = sx;
 
-    x-= Camera.main.transform.x;
+    //Compensate for the camera's location
+    x -= Camera.main.transform.x;
     y -= Camera.main.transform.y;
 
+    //Compensate for the scaling
     x *= sx;
     y *= sy;
 
+    //Compensate for the centering of world space
     x += ctx.canvas.width / 2;
     y += ctx.canvas.height / 2;
 
-    return { x,y };
+    return { x, y };
   }
 
+  /**
+   * Transition to move a coordinate in world space
+   * to GUI space
+   * 
+   * @param {CanvasDrawingContext2D} ctx The drawing context
+   * @param {*} x The x location in world space
+   * @param {*} y The y location in world space
+   * @returns An object with the coordinate in GUI space
+   */
   static worldToGUI(ctx, x, y) {
+    //Move into screen space
     let temp = Camera.worldToScreen(ctx, x, y);
+
+    //Move into GUI space
     let toReturn = Camera.screenToGUI(ctx, temp.x, temp.y);
     return toReturn;
   }
