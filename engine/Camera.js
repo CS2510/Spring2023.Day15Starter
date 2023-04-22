@@ -140,7 +140,6 @@ class Camera extends Component {
     y += Camera.main.transform.y;
 
     return { x, y }
-
   }
 
   /**
@@ -181,12 +180,38 @@ class Camera extends Component {
    * @returns An object with the coordinate in world space
    */
   static GUIToWorld(ctx, x, y) {
-    //Move into screen space
-    let temp1 = Camera.GUIToScreen(ctx, x, y);
-    //The move into world space
-    let temp2 = Camera.screenToWorld(ctx, temp1.x, temp1.y);
+    
+    //Get the scale
+    let logicalScale = Camera.getLogicalScale(ctx);
 
-    return { x: temp2.x, y: temp2.y }
+    //Get the scale transition (including any camera zoom)
+    let sx = Camera.getLogicalScaleZoomable(ctx);
+    let sy = sx;
+
+    //Get the offset of any letter boxing
+    let zeroes = Camera.getZeros(ctx, x, y)
+
+    //Compensate for the scale
+    x *= logicalScale;
+    y *= logicalScale;
+
+    //Compensate for the letter boxing
+    x += zeroes.zeroX
+    y += zeroes.zeroY;//The move into world space
+    
+    //Compensate for the origin in world space
+    x -= ctx.canvas.width / 2;
+    y -= ctx.canvas.height / 2
+
+    //Compensate for the scale
+    x /= sx;
+    y /= sy;
+
+    //Compensate for any camera offset
+    x += Camera.main.transform.x;
+    y += Camera.main.transform.y;
+
+    return { x,y}
   }
 
   /**
@@ -228,12 +253,39 @@ class Camera extends Component {
    * @returns An object with the coordinate in GUI space
    */
   static worldToGUI(ctx, x, y) {
-    //Move into screen space
-    let temp = Camera.worldToScreen(ctx, x, y);
+    //Get any scaling (including the camera zoom)
+    let sxz = Camera.getLogicalScaleZoomable(ctx);
+    let syz = sxz;
 
-    //Move into GUI space
-    let toReturn = Camera.screenToGUI(ctx, temp.x, temp.y);
-    return toReturn;
+    //Get the scale
+    let sx = Camera.getLogicalScale(ctx);
+    let sy = sx;
+
+    //Get any letter boxing
+    let zeroes = Camera.getZeros(ctx)
+
+
+    //Compensate for the camera's location
+    x -= Camera.main.transform.x;
+    y -= Camera.main.transform.y;
+
+    //Compensate for the scaling
+    x *= sxz;
+    y *= syz;
+
+    //Compensate for the centering of world space
+    x += ctx.canvas.width / 2;
+    y += ctx.canvas.height / 2;
+
+    //Compensate for the letter boxes
+    x -= zeroes.zeroX;
+    y -= zeroes.zeroY;
+
+    //Componesate for the scale
+    x /= sx;
+    y /= sy;
+
+    return {x,y};
   }
 
   /**
