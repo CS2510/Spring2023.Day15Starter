@@ -79,77 +79,72 @@ class Camera extends Component {
 
 
   static screenToGUI(ctx, x, y) {
-    let zx, zy;
-    let zeros = Camera.getZeros(ctx)
-    zx = zeros.zeroX;
-    zy = zeros.zeroY;
+   let zeroes = Camera.getZeros(ctx)
+    
+    let sx = Camera.getLogicalScale(ctx);
+    let sy = sx;
 
-    let sx, sy;
-    sx = Camera.getLogicalScale(ctx);
-    sy = sx;
+    x -= zeroes.zeroX;
+    y -= zeroes.zeroY;
 
-    return { x: (x - zx) / sx, y: (y - zy) / sy }
+    x /= sx;
+    y /= sy;
+
+    return { x,y }
   }
 
   static screenToWorld(ctx, x, y) {
-    let rx, ry;
+    let sx = Camera.getLogicalScaleZoomable(ctx);
+    let sy = sx;
 
-    let sx, sy;
-    sx = Camera.getLogicalScaleZoomable(ctx);
-    sy = sx;
+    x -= ctx.canvas.width/2;
+    y -= ctx.canvas.height/2
 
-    rx = x - ctx.canvas.width / 2;
-    ry = y - ctx.canvas.height / 2;
+    x /= sx;
+    y /= sy;
 
-    rx /= sx;
-    ry /= sy;
+    x += Camera.main.transform.x;
+    y += Camera.main.transform.y;
 
-    rx += Camera.main.transform.x;
-    ry += Camera.main.transform.y;
-
-    return { x: rx, y: ry };
+    return {x,y}
 
   }
 
   static GUIToScreen(ctx, x, y) {
-    let rx = x, ry = y;
-
+    
     let logicalScale = Camera.getLogicalScale(ctx);
-    let zeroes = Camera.getZeros(ctx, rx, ry)
-    rx *= logicalScale;
-    ry *= logicalScale;
-    rx += zeroes.zeroX
-    ry += zeroes.zeroY;
+    let zeroes = Camera.getZeros(ctx, x, y)
+    
+    x *= logicalScale;
+    y *= logicalScale;
+    
+    x += zeroes.zeroX
+    y += zeroes.zeroY;
 
-    return { x: rx, y: ry }
+    return { x,y }
   }
 
   static GUIToWorld(ctx, x, y) {
-    let rx = x, ry = y;
-
-    let temp1 = Camera.GUIToScreen(ctx, rx, ry);
+    let temp1 = Camera.GUIToScreen(ctx, x, y);
     let temp2 = Camera.screenToWorld(ctx, temp1.x, temp1.y);
 
     return { x: temp2.x, y: temp2.y }
   }
 
   static worldToScreen(ctx, x, y) {
-    let sx, sy;
-    sx = Camera.getLogicalScaleZoomable(ctx);
-    sy = sx;
-    let rx;
-    let ry;
+    let sx = Camera.getLogicalScaleZoomable(ctx);
+    let sy = sx;
 
-    rx = x - Camera.main.transform.x;
-    ry = y - Camera.main.transform.y;
+    x-= Camera.main.transform.x;
+    y -= Camera.main.transform.y;
 
-    rx *= sx;
-    ry *= sy;
+    x *= sx;
+    y *= sy;
 
-    rx += ctx.canvas.width / 2;
-    ry += ctx.canvas.height / 2;
+    x += ctx.canvas.width / 2;
+    y += ctx.canvas.height / 2;
 
-    return { x: rx, y: ry };
+    return { x,y };
   }
 
   static worldToGUI(ctx, x, y) {
