@@ -1,13 +1,42 @@
 //The code for our Event game
+
+class ScreenMovingComponent extends Component {
+  update(ctx) {
+    this.transform.x = Input.mouseX;
+    this.transform.y = Input.mouseY;
+  }
+}
+
+class ScreenFollowingGUIComponent extends Component {
+  update(ctx) {
+    let moverComponent = GameObject.getObjectByName("ScreenMovingGameObject").getComponent("ScreenMovingComponent");
+
+    let coordinates = Camera.screenToGUI(ctx, moverComponent.transform.x, moverComponent.transform.y);
+
+    this.transform.x = coordinates.x;
+    this.transform.y = coordinates.y;
+  }
+}
+
+class ScreenFollowingWorldComponent extends Component {
+  update(ctx) {
+    let moverComponent = GameObject.getObjectByName("ScreenMovingGameObject").getComponent("ScreenMovingComponent");
+
+    let coordinates = Camera.screenToWorld(ctx, moverComponent.transform.x, moverComponent.transform.y);
+
+    this.transform.x = coordinates.x;
+    this.transform.y = coordinates.y;
+  }
+}
 /**
  * A component that moves across the screen
  * The FollowerComponent follows this component
  */
-class MovingComponentScreen extends Component {
+class GUIFollowingScreenComponent extends Component {
   update(ctx) {
-    let moverComponent = GameObject.getObjectByName("MovingComponentGUIGameObject").getComponent("MovingComponentGUI");
+    let moverComponent = GameObject.getObjectByName("MovingComponentGUIGameObject").getComponent("GUIMovingComponent");
 
-    let coordinates = Camera.GUIToScreen(ctx, moverComponent.transform.x, moverComponent.transform.y, ctx);
+    let coordinates = Camera.GUIToScreen(ctx, moverComponent.transform.x, moverComponent.transform.y);
     this.transform.x = coordinates.x;
     this.transform.y = coordinates.y;
   }
@@ -17,161 +46,126 @@ class MovingComponentScreen extends Component {
  * This class tracks the MoverComponent and centers around that
  * 
  */
-class MovingComponentGUI extends Component {
+class GUIMovingComponent extends Component {
   update(ctx) {
     this.transform.x += Time.deltaTime;
   }
 }
 
-class WorldFollowerComponent extends Component {
+class GUIFollowingWorldComponent extends Component {
   update(ctx) {
-    let moverComponent = GameObject.getObjectByName("MovingComponentGUIGameObject").getComponent("MovingComponentGUI");
+    let moverComponent = GameObject.getObjectByName("MovingComponentGUIGameObject").getComponent("GUIMovingComponent");
 
-    let coordinates = Camera.GUIToWorld(ctx, moverComponent.transform.x, moverComponent.transform.y, ctx);
+    let coordinates = Camera.GUIToWorld(ctx, moverComponent.transform.x, moverComponent.transform.y);
     this.transform.x = coordinates.x;
     this.transform.y = coordinates.y;
-    // this.transform.x = coordinates.x;
-    // this.transform.y = coordinates.y;
   }
 }
 
-class MouseFollowingGUIComponent extends Component {
+class WorldFollowingScreenComponent extends Component {
   update(ctx) {
+    let worldSpace = GameObject.getObjectByName("OriginWorldSpaceGameObject").getComponent("WorldMovingComponent")
 
-    let screenSpace = Camera.screenToLogical(ctx, Input.mouseX, Input.mouseY, ctx);
+    let screenSpace = Camera.worldToScreen(ctx, worldSpace.transform.x, worldSpace.transform.y);
     this.transform.x = screenSpace.x;
     this.transform.y = screenSpace.y;
-
-    // console.log(Input.mouseX + ", " + Input.mouseY + "-> " + this.transform.x + ", " + this.transform.y)
   }
 }
 
-class MouseFollowingWorldSpaceComponent extends Component {
-  start() {
-  }
+class WorldFollowingGUIComponent extends Component {
   update(ctx) {
-    let worldSpace = Camera.screenToWorld(ctx, Input.mouseX, Input.mouseY, ctx)
-    this.transform.x = worldSpace.x;
-    this.transform.y = worldSpace.y;
-  }
-}
+    let worldSpace = GameObject.getObjectByName("OriginWorldSpaceGameObject").getComponent("WorldMovingComponent")
 
-class MouseFollowingScreenSpaceComponent extends Component {
-  start() {
-  }
-  update(ctx) {
-    this.transform.x = Input.mouseX;
-    this.transform.y = Input.mouseY;
-  }
-}
-
-class OriginGUIComponent extends Component {
-  update(ctx) {
-    let guiSpace = Camera.worldToGUI(ctx, 0, 0);
+    let guiSpace = Camera.worldToGUI(ctx, worldSpace.transform.x, worldSpace.transform.y);
     this.transform.x = guiSpace.x;
     this.transform.y = guiSpace.y;
   }
 }
 
-class OriginScreenComponent extends Component {
+class WorldMovingComponent extends Component {
   update(ctx) {
-    let screenSpace = Camera.worldToScreenSpace(ctx, 0, 0);
-    this.transform.x = screenSpace.x;
-    this.transform.y = screenSpace.y;
-  }
-}
-
-class CameraDisplacer extends Component {
-  start() {
-    Camera.main.transform.x = -5;
-    Camera.main.transform.sx = 1.0;
-    Camera.main.transform.sy = 1.0;
+    this.transform.x += Time.deltaTime;
   }
 }
 
 class EventScene extends Scene {
   start() {
-
     this.addGameObject(
       new GameObject("EventController")
         .addComponent(new CameraMover())
     )
 
     this.addGameObject(
-      new GameObject("MouseFollowingWorldSpaceGameObject")
-        .addComponent(new MouseFollowingWorldSpaceComponent())
-        .addComponent(new Rectangle("blue"))
-        .addComponent(new CameraMover())
+      new GameObject("ScreenMovingGameObject")
+        .addComponent(new ScreenMovingComponent())
+        .addComponent(new ScreenRectangle("transparent", "blue", 5)),
+      Vector2.zero,
+      new Vector2(40, 40)
     )
 
     this.addGameObject(
-      new GameObject("MouseFollowingGUIGameObject")
-        .addComponent(new MouseFollowingGUIComponent())
+      new GameObject("ScreenFollowingGUIGameObject")
+        .addComponent(new ScreenFollowingGUIComponent())
         .addComponent(new GUIRectangle("transparent", "blue", .5)),
       Vector2.zero,
-      new Vector2(2, 2),
-      0,
-      0
+      new Vector2(2, 2)
     )
 
     this.addGameObject(
-      new GameObject("MouseFollowingScreenSpaceGameObject")
-      .addComponent(new MouseFollowingScreenSpaceComponent())
-      .addComponent(new ScreenRectangle("transparent", "blue", 5)),
+      new GameObject("ScreenFollowingWorldGameObject")
+        .addComponent(new ScreenFollowingWorldComponent())
+        .addComponent(new Rectangle("blue"))
+    )
+    
+    this.addGameObject(
+      new GameObject("MovingComponentScreenGameObject")
+        .addComponent(new GUIFollowingScreenComponent())
+        .addComponent(new ScreenRectangle("transparent", "green", 20)),
+      new Vector2(100, 200),
+      new Vector2(2, 2)
+    );
+
+    this.addGameObject(
+      new GameObject("MovingComponentGUIGameObject")
+        .addComponent(new GUIRectangle("transparent", "green", 2))
+        .addComponent(new GUIMovingComponent()),
       Vector2.zero,
-      new Vector2(40,40)
+      new Vector2(10, 10)
     )
 
     this.addGameObject(
-      new GameObject("OriginWorldSpaceGameObject")
-        .addComponent(new Rectangle("magenta")),
+      new GameObject("WorldFollowerGameObject")
+        .addComponent(new Rectangle("transparent", "green", 2))
+        .addComponent(new GUIFollowingWorldComponent()),
       Vector2.zero,
-      Vector2.one,
-      0,
-      1
+      new Vector2(20, 20)
+    )
+
+    this.addGameObject(
+      new GameObject("OriginScreenGameObject")
+        .addComponent(new ScreenRectangle("transparent", "magenta", 4))
+        .addComponent(new WorldFollowingScreenComponent("transparent", "magenta", 5)),
+      new Vector2(200, 200),
+      new Vector2(40, 40)
     )
 
     this.addGameObject(
       new GameObject("OriginGUIGameObject")
         .addComponent(new GUIRectangle("transparent", "magenta", .5))
-        .addComponent(new OriginGUIComponent()),
+        .addComponent(new WorldFollowingGUIComponent()),
       Vector2.zero,
-      new Vector2(2, 2),
-      0,
-      0
+      new Vector2(2, 2)
     )
 
-      this.addGameObject(
-        new GameObject("OriginScreenGameObject")
-        .addComponent(new ScreenRectangle("transparent", "magenta", 4))
-        .addComponent(new OriginScreenComponent("transparent", "magenta", 5)),
-        new Vector2(200,200),
-        new Vector2(40,40)
-      )
-
-      this.addGameObject(
-        new GameObject("MovingComponentScreenGameObject")
-          .addComponent(new MovingComponentScreen())
-          .addComponent(new ScreenRectangle("transparent", "green", 20)),
-          new Vector2(100,200),
-          new Vector2(2,2)
-      );
-
-      this.addGameObject(
-        new GameObject("MovingComponentGUIGameObject")
-          .addComponent(new GUIRectangle("transparent", "green", 2))
-          .addComponent(new MovingComponentGUI()),
-        Vector2.zero,
-        new Vector2(10, 10)
-      )
-
-      this.addGameObject(
-        new GameObject("WorldFollowerGameObject")
-          .addComponent(new Rectangle("transparent", "green", 2))
-          .addComponent(new WorldFollowerComponent()),
-        Vector2.zero,
-        new Vector2(20, 20)
-      )
+    this.addGameObject(
+      new GameObject("OriginWorldSpaceGameObject")
+        .addComponent(new Rectangle("magenta"))
+        .addComponent(new WorldMovingComponent()),
+      Vector2.zero,
+      Vector2.one,
+      0,
+      1
+    )
   }
 }
 

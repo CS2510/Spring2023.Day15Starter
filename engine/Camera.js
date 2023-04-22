@@ -203,7 +203,7 @@ class Camera extends Component {
 
   
   //Keep
-  static worldToScreenSpace(ctx, x, y) {
+  static worldToScreen(ctx, x, y) {
     let sx, sy;
     sx = Camera.getLogicalScaleZoomable(ctx);
     sy = sx;
@@ -223,7 +223,7 @@ class Camera extends Component {
   }
 
   //Keep
-  static screenToLogical(ctx, x, y) {
+  static screenToGUI(ctx, x, y) {
     let zx, zy;
     let zeros = Camera.getZeros(ctx)
     zx = zeros.zeroX;
@@ -259,8 +259,8 @@ class Camera extends Component {
 
   //Keep
   static worldToGUI(ctx, x, y){
-    let temp = Camera.worldToScreenSpace(ctx, x,y);
-    let toReturn = Camera.screenToLogical(ctx,temp.x, temp.y);
+    let temp = Camera.worldToScreen(ctx, x,y);
+    let toReturn = Camera.screenToGUI(ctx,temp.x, temp.y);
     return toReturn;
   }
 
