@@ -1,12 +1,25 @@
 //The code for our Event game
 
+/**
+ * Component that follows the mouse in screen space.
+ * 
+ * <p>
+ * The ScreenFollowingGUIComponent and ScreenFollowing World Component 
+ * use the space transitions in Camera to follow this component
+ * </p>
+ */
 class ScreenMovingComponent extends Component {
-  update(ctx) {
+  update() {
+    //Set the location of this component to the mouse' location.
     this.transform.x = Input.mouseX;
     this.transform.y = Input.mouseY;
   }
 }
 
+/**
+ * Component that follows the ScreenMoving Component, 
+ * but is drawn in GUI space
+ */
 class ScreenFollowingGUIComponent extends Component {
   update(ctx) {
     let moverComponent = GameObject.getObjectByName("ScreenMovingGameObject").getComponent("ScreenMovingComponent");
@@ -18,6 +31,10 @@ class ScreenFollowingGUIComponent extends Component {
   }
 }
 
+/**
+ * Component that follows the ScreenMoving Component,
+ * but in world space.
+ */
 class ScreenFollowingWorldComponent extends Component {
   update(ctx) {
     let moverComponent = GameObject.getObjectByName("ScreenMovingGameObject").getComponent("ScreenMovingComponent");
@@ -28,9 +45,10 @@ class ScreenFollowingWorldComponent extends Component {
     this.transform.y = coordinates.y;
   }
 }
+
 /**
- * A component that moves across the screen
- * The FollowerComponent follows this component
+ * A component that follows the GUIMovingComponent,
+ * but in screen space.
  */
 class GUIFollowingScreenComponent extends Component {
   update(ctx) {
@@ -43,7 +61,10 @@ class GUIFollowingScreenComponent extends Component {
 }
 
 /**
- * This class tracks the MoverComponent and centers around that
+ * A componenth that moves to the right in GUI space.
+ * 
+ * The GUIFollowingScreenComponent and GUIFollowingWorldComponent
+ * use the space transitions in Camera to follow this component.
  * 
  */
 class GUIMovingComponent extends Component {
@@ -52,6 +73,10 @@ class GUIMovingComponent extends Component {
   }
 }
 
+/**
+ * A component that follows the GUIMovingComponent,
+ * but in world space.
+ */
 class GUIFollowingWorldComponent extends Component {
   update(ctx) {
     let moverComponent = GameObject.getObjectByName("MovingComponentGUIGameObject").getComponent("GUIMovingComponent");
@@ -62,6 +87,10 @@ class GUIFollowingWorldComponent extends Component {
   }
 }
 
+/**
+ * A component that follows the WorldMovingComponent,
+ * but in screen space.
+ */
 class WorldFollowingScreenComponent extends Component {
   update(ctx) {
     let worldSpace = GameObject.getObjectByName("OriginWorldSpaceGameObject").getComponent("WorldMovingComponent")
@@ -72,6 +101,10 @@ class WorldFollowingScreenComponent extends Component {
   }
 }
 
+/**
+ * A component that follows the WorldMoving Component,
+ * but in GUI space.
+ */
 class WorldFollowingGUIComponent extends Component {
   update(ctx) {
     let worldSpace = GameObject.getObjectByName("OriginWorldSpaceGameObject").getComponent("WorldMovingComponent")
@@ -82,12 +115,22 @@ class WorldFollowingGUIComponent extends Component {
   }
 }
 
+/**
+ * A componenth that moves to the right in world space.
+ * 
+ * The WorldFollowingScreenComponent and WorldFollowingGUIComponent
+ * use the space transitions in Camera to follow this component.
+ * 
+ */
 class WorldMovingComponent extends Component {
   update(ctx) {
     this.transform.x += Time.deltaTime;
   }
 }
 
+/**
+ * Scene class for this example
+ */
 class EventScene extends Scene {
   start() {
     this.addGameObject(
@@ -116,7 +159,7 @@ class EventScene extends Scene {
         .addComponent(new ScreenFollowingWorldComponent())
         .addComponent(new Rectangle("blue"))
     )
-    
+
     this.addGameObject(
       new GameObject("MovingComponentScreenGameObject")
         .addComponent(new GUIFollowingScreenComponent())
