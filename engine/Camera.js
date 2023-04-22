@@ -136,6 +136,9 @@ class Camera extends Component {
   /**
    * Given a coordinate in screen space, determine its coordinate
    * in logical space after letterboxing.
+   * 
+   * @deprecated
+   * 
    * @param {Number} x The x coordinate in screen space
    * @param {Number} y The y coordinate in screen space
    * @param {CanvasDrawingContext2D} ctx The drawing context
@@ -229,6 +232,12 @@ class Camera extends Component {
     ry = y * sy + zy;
 
     return { x: rx, y: ry };
+  }
+
+  static worldToGUI(ctx, x, y){
+    let temp = Camera.worldToScreenSpace(ctx, x,y);
+    let toReturn = Camera.screenToLogical(ctx,temp.x, temp.y);
+    return toReturn;
   }
 
   /**
