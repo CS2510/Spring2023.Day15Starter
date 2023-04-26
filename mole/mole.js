@@ -1,14 +1,51 @@
 //The code for our example game
 class MoleControllerComponent extends Component {
   start() {
+    this.addMole();
+    
+  }
+  addMole(){
     let toAdd = new MoleGameObject();
     GameObject.instantiate(toAdd)
+    let moleComponent = toAdd.getComponent("MoleComponent")
+    moleComponent.addListener(this)
+    toAdd.transform.x = (Math.random()*2-1)*10;
+    toAdd.transform.y = (Math.random()*2-1)*10;
+    
+    
+    let toAddFollower = new MoleFollowerGameObject()
+    GameObject.instantiate(toAddFollower);
+    let followingComponent = toAddFollower.getComponent("MoleFollowerComponent")
+    followingComponent.following = toAdd;
+
+    moleComponent.addListener(followingComponent);
   }
   update() {
+  }
+  handleUpdate(event){
+    this.addMole();
   }
 }
 
 class MoleComponent extends Component{
+  update(ctx){
+    if(Input.mouseUp){
+      let screenX = Input.mouseX;
+      let screenY = Input.mouseY;
+
+      let worldCoords = Camera.screenToWorld(ctx, screenX, screenY);
+      if(!worldCoords) return;
+      let deltaX = this.transform.x - worldCoords.x;
+      let deltaY = this.transform.y - worldCoords.y
+      let distance = Math.sqrt(deltaX**2 + deltaY**2);
+      if(distance < this.transform.sx)
+      {
+        this.parent.destroy()
+        this.updateListeners("MoleClick")
+      }
+    }
+
+  }
 
 }
 
@@ -22,10 +59,26 @@ class MoleGameObject extends GameObject{
   }
 }
 
+class MoleFollowerComponent extends Component{
+  following
+  update(ctx){
+    if(!this.following) return;
+    let otherTransform = this.following.transform;
+    let destination = Camera.worldToGUI(ctx, otherTransform.x, otherTransform.y);
+    this.transform.x = destination.x;
+    this.transform.y = destination.y;
+
+  }
+  handleUpdate(event){
+    this.parent.destroy();
+  }
+}
+
 class MoleFollowerGameObject extends GameObject{
   name = "MoleFollowerGameObject"
   start(){
-    this.addComponent(new GUIText())
+    this.addComponent(new GUITextCentered("Click", "gray", "2pt Arial"))
+    this.addComponent(new MoleFollowerComponent());
   }
 }
 
