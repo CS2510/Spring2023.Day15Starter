@@ -11,6 +11,8 @@ class MoleControllerComponent extends Component {
     moleComponent.addListener(this)
     toAdd.transform.x = (Math.random()*2-1)*10;
     toAdd.transform.y = (Math.random()*2-1)*10;
+    // toAdd.transform.x = 0;
+    // toAdd.transform.y = 0;
     
     
     let toAddFollower = new MoleFollowerGameObject()
@@ -33,7 +35,20 @@ class MoleComponent extends Component{
       let screenX = Input.mouseX;
       let screenY = Input.mouseY;
 
-      let worldCoords = Camera.screenToWorld(ctx, screenX, screenY);
+      let worldCoords2 = Camera.screenToWorld(ctx, screenX, screenY);
+      let worldCoords = {x:screenX, y:screenY}
+      worldCoords.x -= ctx.canvas.width/2;
+      worldCoords.y -= ctx.canvas.height/2;
+      
+      worldCoords.x /= Camera.getLogicalScale(ctx);
+      worldCoords.y /= Camera.getLogicalScale(ctx);
+
+      worldCoords.x *= Camera.main.transform.sx;
+      worldCoords.y *= Camera.main.transform.sy;
+
+      worldCoords.x += Camera.main.transform.x;
+      worldCoords.y += Camera.main.transform.y;
+
       if(!worldCoords) return;
       let deltaX = this.transform.x - worldCoords.x;
       let deltaY = this.transform.y - worldCoords.y
