@@ -1,0 +1,19 @@
+<!-- The main file for playing our game. -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/engine/engine.css" rel="stylesheet">
+</head>
+
+<body>
+    <canvas id="canv"></canvas>
+    <script type="module">
+        import "/engine/engine.js"
+        import scene from "./collision-test.js"
+        SceneManager.addScene(scene);
+        start("Collision Test")
+    </script>
+</body>
+
+</html>
