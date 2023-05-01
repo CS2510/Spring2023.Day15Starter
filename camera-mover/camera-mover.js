@@ -26,8 +26,8 @@ class Drawer extends Component{
     //Draw the world location
     ctx.strokeStyle = "black"
     ctx.lineWidth = 10;
-    let worldScreen = Camera.worldToScreenSpace(ctx, 0,0);
-    let worldScreenEnd = Camera.worldToScreenSpace(ctx, 10,10);
+    let worldScreen = Camera.worldToScreen(ctx, 0,0);
+    let worldScreenEnd = Camera.worldToScreen(ctx, 10,10);
     ctx.beginPath();
     ctx.moveTo(worldScreen.x, worldScreen.y);
     ctx.lineTo(worldScreenEnd.x, worldScreenEnd.y);
@@ -36,8 +36,8 @@ class Drawer extends Component{
     //Draw the logical location
     ctx.strokeStyle = "green"
     ctx.lineWidth = 5;
-    let logicalScreen = Camera.logicalToScreenSpace(ctx, 50,50*9/16);
-    let logicalScreenEnd = Camera.logicalToScreenSpace(ctx, 50+10, 50*9/16+10);
+    let logicalScreen = Camera.GUIToScreen(ctx, 50,50*9/16);
+    let logicalScreenEnd = Camera.GUIToScreen(ctx, 50+10, 50*9/16+10);
     ctx.beginPath();
     ctx.moveTo(logicalScreen.x, logicalScreen.y);
     ctx.lineTo(logicalScreenEnd.x, logicalScreenEnd.y);
