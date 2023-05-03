@@ -104,10 +104,7 @@ function gameLoop() {
  * This function should never by called by game code.
  */
 function update() {
-    //Match the size of the canvas to the browser's size
-    //This allows us to respond to browser size changes
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    
 
     //Handle the case when there is a system level pause.
     if (pause) return
@@ -186,6 +183,10 @@ let letterboxColor = "gray"
  * This should never be called directly from game code.
  */
 function draw() {
+    //Match the size of the canvas to the browser's size
+    //This allows us to respond to browser size changes
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
     //Adjust for the camera
     ctx.fillStyle = Camera.main.fillStyle;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);

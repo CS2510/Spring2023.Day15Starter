@@ -70,13 +70,16 @@ class Vector2 {
   minus(other){
     return new Vector2(this.x-other.x, this.y - other.y);
   }
+  add(other){
+    return new Vector2(this.x + other.x, this.y+other.y);
+  }
 
   perpendicular(){
     return new Vector2(this.y, -this.x);
   }
 
   dot(other){
-    return this.x * other.x + this.y + other.y;
+    return this.x * other.x + this.y * other.y;
   }
 
   length(){
@@ -86,6 +89,9 @@ class Vector2 {
     let length = this.length();
     if(!length) throw "Divide by zero error";
     return new Vector2(this.x/length, this.y/length);
+  }
+  scale(scalar){
+    return new Vector2(this.x*scalar, this.y*scalar);
   }
 }
 
