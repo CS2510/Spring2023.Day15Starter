@@ -271,34 +271,133 @@ class Collision {
     }
   }
   static handlePointCircle(one, two) {
-    //Get the distance, compare to radius
-    return false;
+    let distance = Math.sqrt((one.transform.x - two.transform.x) ** 2 + (one.transform.y - two.transform.y) ** 2)
+    return distance <= two.transform.sx;
   }
   static handlePointRect(one, two) {
-    //Get left, right, top, and bottom
-    //Compare
-    return false;
+    let x = one.transform.x;
+    let y = one.transform.y;
+    let left = two.transform.x - two.transform.sx / 2;
+    let right = two.transform.x + two.transform.sx / 2;
+    let bottom = two.transform.y - two.transform.sy / 2;
+    let top = two.transform.y + two.transform.sy / 2;
+
+    return x > left && x < right && y > bottom && y < top;
   }
   static handleCircleCircle(one, two) {
-    //Distance compared to radii sumed
-    return false;
+    let distance = Math.sqrt((one.transform.x - two.transform.x) ** 2 + (one.transform.y - two.transform.y) ** 2)
+    return distance <= one.transform.sx + two.transform.sx;
   }
   static handleCircleRect(one, two) {
-    //Get the line between the centers
-    //Calculate AB
-    //Calculate C
-    //Calculate distance
-    //Get the corner vectors
-    //Project corner vectors
-    //Add distance
-    //Compare to radius
+
+    let lineBetweenCenters = { AB: null, C: null, distance:0 };
+    let centerCircle = new Vector2(one.transform.x, one.transform.y);
+    let centerRectangle = new Vector2(two.transform.x, two.transform.y);
+    lineBetweenCenters.AB = centerCircle.minus(centerRectangle).normalize();
+  
+    lineBetweenCenters.C = -lineBetweenCenters.AB.dot(centerCircle)
+    lineBetweenCenters.distance = centerCircle.minus(centerRectangle).length();
+
+    let r1 = centerCircle.add(lineBetweenCenters.AB.scale(one.transform.sx))
+    let r2 = centerCircle.add(lineBetweenCenters.AB.scale(-one.transform.sx))
+
+    let corner1 = new Vector2(two.transform.sx/2, two.transform.sy/2);
+    let corner2 = new Vector2(-two.transform.sx/2, two.transform.sy/2);
+    let corner3 = new Vector2(-two.transform.sx/2, -two.transform.sy/2);
+    let corner4 = new Vector2(two.transform.sx/2, -two.transform.sy/2);
+
+    let dot1 = corner1.dot(lineBetweenCenters.AB)+lineBetweenCenters.distance
+    let dot2 = corner2.dot(lineBetweenCenters.AB)+lineBetweenCenters.distance
+    let dot3 = corner3.dot(lineBetweenCenters.AB)+lineBetweenCenters.distance
+    let dot4 = corner4.dot(lineBetweenCenters.AB)+lineBetweenCenters.distance
+    let dots = [dot1,dot2, dot3, dot4];
+    let rs = [one.transform.sx, -one.transform.sx];
+    for(let dot of dots){
+      if(dot < one.transform.sx)
+      return true
+    }
     return false;
+
+
+    // let possibleLines = [];
+
+    // let left = two.transform.x - two.transform.sx / 2;
+    // let right = two.transform.x + two.transform.sx / 2;
+    // let bottom = two.transform.y - two.transform.sy / 2;
+    // let top = two.transform.y + two.transform.sy / 2;
+
+    // if (one.transform.x < left) {
+    //   let one = new Vector2(left, bottom);
+    //   let two = new Vector2(left, top);
+    //   let AB = one.minus(two).normalize().perpendicular()
+    //   let C = -AB.dot(one);
+    //   possibleLines.push({ AB, C })
+    // }
+    // if (one.transform.x > right) {
+    //   let one = new Vector2(right, bottom);
+    //   let two = new Vector2(right, top);
+    //   let AB = one.minus(two).normalize().perpendicular()
+    //   let C = -AB.dot(one);
+    //   possibleLines.push({ AB, C })
+
+    // }
+    // if (one.transform.y < bottom) {
+    //   let one = new Vector2(left, bottom);
+    //   let two = new Vector2(right, bottom);
+    //   let AB = one.minus(two).normalize().perpendicular()
+    //   let C = -AB.dot(one);
+    //   possibleLines.push({ AB, C })
+    // }
+    // if (one.transform.y > top) {
+    //   let one = new Vector2(left, top);
+    //   let two = new Vector2(right, top);
+    //   let AB = one.minus(two).normalize().perpendicular()
+    //   let C = -AB.dot(one);
+    //   possibleLines.push({ AB, C })
+    // }
+
+    // if (possibleLines.length == 0) {
+    //   return true
+    // }
+
+    // if (one.transform.x < 24.7) {
+    //   let noop;
+    //   console.log("Hi")
+    // }
+
+    // //Go through the possible lines and respond accordingly
+    // let distances = [];
+
+    // for (let line of possibleLines) {
+    //   let distance = line.AB.dot(new Vector2(one.transform.x, one.transform.y)) + line.C;
+    //   distances.push(distance);
+    // }
+
+    // let maxDistance = Math.max(...distances.map(x => Math.abs(x)));
+    // if (maxDistance < one.transform.sx) {
+    //   return true;
+    // }
+    // return false;
+
+
 
   }
   static handleRectRect(one, two) {
-    //Get left, right, top, and bottom of both
-    //See if they are exterior
-    return false;
+    let left1 = one.transform.x - one.transform.sx / 2;
+    let right1 = one.transform.x + one.transform.sx / 2;
+    let bottom1 = one.transform.y - one.transform.sy / 2
+    let top1 = one.transform.y + one.transform.sy / 2
+
+    let left2 = two.transform.x - two.transform.sx / 2;
+    let right2 = two.transform.x + two.transform.sx / 2;
+    let bottom2 = two.transform.y - two.transform.sy / 2
+    let top2 = two.transform.y + two.transform.sy / 2
+
+    return !(left1 > right2 || left2 > right1
+      || right1 < left2 || right2 < left1
+      || bottom1 > top2 || bottom2 > top1
+      || top1 < bottom2 || top2 < bottom1)
+
   }
 }
 
