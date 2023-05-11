@@ -1,0 +1,19 @@
+<!-- The main file for playing our persistence game. -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/engine/engine.css" rel="stylesheet">
+</head>
+
+<body>
+    <canvas id="canv"></canvas>
+    <script type="module">
+        import "/engine/engine.js"
+        import scene from "./persistence.js"
+        SceneManager.addScene(scene);
+        start("Persistence")
+    </script>
+</body>
+
+</html>

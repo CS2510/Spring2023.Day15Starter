@@ -35,6 +35,10 @@ class Input {
 
   static mouseUp = false;
 
+  static keyUp = [];
+
+  static keyDown = [];
+
   /**
    * Reset certain values when the frame ends.
    * 
@@ -51,6 +55,7 @@ class Input {
     Input.lastMouseY = Input.mouseY;
     Input.tick = 0;
     Input.mouseUp = false;
+    Input.keyUp = [];
   }
 
   /**
@@ -120,13 +125,18 @@ class Input {
 
     //Add the keyup event to the canvas. 
     //See https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
-    document.addEventListener("keyup", (e) => { });
+    document.addEventListener("keyup", (e) => {
+      Input.keyDown[e.key] = false; 
+      Input.keyUp[e.key] = true
+    });
 
     //Add the keydown event to the canvas. 
     //Be careful with this event. Many operating system have a repeating key option 
     //that will call this event repeatedly, even if the user hasn't pushed the key down again.
     //See  https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event.
-    document.addEventListener("keydown", (e) => { });
+    document.addEventListener("keydown", (e) => {
+      Input.keyDown[e.key] = true;
+     });
 
     //Add the keypress event to the canvas. 
     //See https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
