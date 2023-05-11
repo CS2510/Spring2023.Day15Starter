@@ -294,6 +294,10 @@ class Collision {
     let centerCircle = new Vector2(one.transform.x, one.transform.y);
     let centerRectangle = new Vector2(two.transform.x, two.transform.y);
     lineBetweenCenters.AB = centerCircle.minus(centerRectangle).normalize();
+    let tempA = lineBetweenCenters.AB.x;
+    let tempB = lineBetweenCenters.AB.y;
+    lineBetweenCenters.AB.x = tempB;
+    lineBetweenCenters.AB.y = -tempA;
   
     lineBetweenCenters.C = -lineBetweenCenters.AB.dot(centerCircle)
     lineBetweenCenters.distance = centerCircle.minus(centerRectangle).length();
